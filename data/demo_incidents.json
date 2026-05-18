@@ -1,0 +1,137 @@
+[
+  {
+    "id": "INC-001",
+    "raw_log": "2025-06-15T14:23:11.456Z ERROR [payment-processor-v2] Redis connection pool exhausted: pool_size=10, active=10, waiting=12, timeout=2000ms. Stack: com.paystream.redis.RedisPoolManager.acquire(Main.java:134) ~[pool-4-thread-1] at com.paystream.payment.TransactionHandler.processPayment(TransactionHandler.java:89)",
+    "service": "payment-processor-v2",
+    "root_cause": "Redis connection pool exhausted due to payment spike",
+    "fix": "Increased CONNECTION_POOL_SIZE from 10 to 25, added connection timeout retry logic",
+    "resolution_time_minutes": 8,
+    "timestamp": "2025-06-15T14:31:00Z"
+  },
+  {
+    "id": "INC-002",
+    "raw_log": "2025-06-16T09:45:33.789Z FATAL [postgres-primary] FATAL: remaining connection slots are reserved for non-replication superuser connections. PID: 28473, Query: SELECT * FROM transactions WHERE user_id = ? AND status = 'pending' LIMIT 100. Connection count: 197/200.",
+    "service": "postgres-primary",
+    "root_cause": "PostgreSQL max connections reached due to unclosed connection pools from API servers",
+    "fix": "Reduced pg_bouncer max_connections from 200 to 300, fixed connection leak in api-gateway pool release logic",
+    "resolution_time_minutes": 22,
+    "timestamp": "2025-06-16T10:07:00Z"
+  },
+  {
+    "id": "INC-003",
+    "raw_log": "2025-06-18T22:11:45.123Z WARN [redis-cache-03] OOM command not allowed when used memory > 'maxmemory'. Used: 512MB/512MB. Keys evicted: 1432 in last 60s. LRU eviction rate critical. Top keys by memory: session:* (45%), payment:lock:* (30%), cache:* (25%).",
+    "service": "redis-cache-03",
+    "root_cause": "Redis maxmemory limit reached causing mass eviction of session data",
+    "fix": "Increased maxmemory to 1GB, added TTL enforcement on session keys, implemented key expiration policy for payment locks",
+    "resolution_time_minutes": 15,
+    "timestamp": "2025-06-18T22:26:00Z"
+  },
+  {
+    "id": "INC-004",
+    "raw_log": "2025-06-20T03:33:22.001Z ERROR [auth-service] JWT token validation failed: token_expired. Token: eyJhbGciOiJSUzI1NiIsImtpZCI6InByb2QtdjIifQ. User: user_8a3f2c, Client IP: 203.0.113.42, User-Agent: PayStreamApp/3.2.1 (iOS 18.1). Expired at: 2025-06-20T03:28:00Z, Now: 2025-06-20T03:33:22Z.",
+    "service": "auth-service",
+    "root_cause": "JWT token expiry not handled gracefully by auth-service token refresh logic",
+    "fix": "Updated token refresh endpoint to return 401 with retry_after header, added auto-refresh on client side for tokens expiring within 5 minutes",
+    "resolution_time_minutes": 12,
+    "timestamp": "2025-06-20T03:45:00Z"
+  },
+  {
+    "id": "INC-005",
+    "raw_log": "2025-06-22T11:05:17.456Z CRIT [api-gateway] 502 Bad Gateway | upstream_response_time: 30002ms | upstream: \"https://payment-processor-v2.internal:8080/api/v2/process\" | request_id: req_b7e91a3f | client_ip: 198.51.100.23 | method: POST | path: /api/v2/payments | body_size: 4582 bytes",
+    "service": "api-gateway",
+    "root_cause": "API gateway 502 timeout because payment-processor-v2 was slow due to Redis pool exhaustion",
+    "fix": "Increased gateway upstream timeout from 10s to 30s, added circuit breaker for payment service with 50% traffic shedding on high latency",
+    "resolution_time_minutes": 18,
+    "timestamp": "2025-06-22T11:23:00Z"
+  },
+  {
+    "id": "INC-006",
+    "raw_log": "2025-06-25T08:15:44.789Z ERROR [fraud-detection-ml] ML model inference timeout: model_version=3.2.1, input_batch_size=64, timeout_ms=5000, actual_latency_ms=8743. GPU utilization: 97%, VRAM: 14.8GB/16GB. Model: paystream_fraud_v3.onnx. Request dropped: transaction_tx_9f2a871.",
+    "service": "fraud-detection-ml",
+    "root_cause": "ML model inference timeout due to GPU memory pressure and batch size too large",
+    "fix": "Reduced inference batch size from 64 to 32, added GPU memory monitoring alert at 85%, implemented request queuing with priority levels",
+    "resolution_time_minutes": 25,
+    "timestamp": "2025-06-25T08:40:00Z"
+  },
+  {
+    "id": "INC-007",
+    "raw_log": "2025-06-28T19:44:33.123Z FATAL [k8s-worker-node-05] OOMKilled | Pod: notification-worker-7f8b9c2d-3k9m1 | Namespace: paystream-prod | Container: notification-worker | Memory limit: 512Mi | Requested: 256Mi | Peak usage before kill: 498Mi | Exit code: 137 | Restarts: 3 in last 24h",
+    "service": "notification-worker",
+    "root_cause": "Kubernetes OOMKilled notification worker due to memory leak in email template rendering",
+    "fix": "Increased memory limit from 512Mi to 1Gi, fixed HTML email template memory leak (unclosed file handles in template loader), added memory usage metrics",
+    "resolution_time_minutes": 35,
+    "timestamp": "2025-06-28T20:19:00Z"
+  },
+  {
+    "id": "INC-008",
+    "raw_log": "2025-07-01T10:30:22.456Z ERROR [api-gateway] SSL certificate verification failed: certificate_expired | host: api.paystream.io | cert_fingerprint: SHA256:ABC123DEF456 | issuer: Let's Encrypt Authority X3 | expiry: 2025-06-30T23:59:59Z | chain: [R3, ISRG Root X1] | sni: api.paystream.io",
+    "service": "api-gateway",
+    "root_cause": "SSL certificate for api.paystream.io expired, causing all HTTPS traffic to fail",
+    "fix": "Renewed SSL certificate via certbot, updated automated renewal cron job, added certificate expiry monitoring with 14-day alert",
+    "resolution_time_minutes": 10,
+    "timestamp": "2025-07-01T10:40:00Z"
+  },
+  {
+    "id": "INC-009",
+    "raw_log": "2025-07-03T16:55:11.789Z WARN [postgres-primary] Disk space critical: mount=/data/postgres, usage=97.2%, total=500GB, used=485GB, free=15GB. Autovacuum running on transactions_2025_06 (estimated WAL growth: 2GB/hr). Projects to hit 100% in ~7.5 hours.",
+    "service": "postgres-primary",
+    "root_cause": "Disk space at 97% on postgres-primary due to WAL file accumulation and large transaction table bloat",
+    "fix": "Ran VACUUM FULL on old partition tables, increased disk by 200GB via cloud provider, configured WAL archiving cleanup retention to 48h, added 85% disk alert",
+    "resolution_time_minutes": 30,
+    "timestamp": "2025-07-03T17:25:00Z"
+  },
+  {
+    "id": "INC-010",
+    "raw_log": "2025-07-05T07:22:44.123Z ERROR [notification-worker] Message queue consumer lag critical: queue=paystream.email.notifications, group=email-workers, lag=45831 messages, oldest_message_age=14.3 minutes, consumer_count=3, partition_count=6, broker=kafka-02:9092, throughput=320 msg/s, required=1200 msg/s",
+    "service": "notification-worker",
+    "root_cause": "Kafka consumer lag due to insufficient consumer instances during marketing email campaign",
+    "fix": "Scaled notification worker from 3 to 8 replicas, increased consumer count to match partition count, added consumer lag auto-scaling HPA",
+    "resolution_time_minutes": 12,
+    "timestamp": "2025-07-05T07:34:00Z"
+  },
+  {
+    "id": "INC-011",
+    "raw_log": "2025-07-08T13:47:33.456Z ERROR [payment-processor-v2] Could not acquire connection from Redis pool: pool_name=payment-locks, max_wait=2000ms, active_connections=15, idle=0, pending_acquires=8. Redis endpoint: redis-cluster.internal:6379. Thread: pool-8-thread-3.",
+    "service": "payment-processor-v2",
+    "root_cause": "Redis connection pool exhausted for payment locks during high traffic period",
+    "fix": "Increased pool size to 25, added retry with backoff for lock acquisition, implemented connection pool health check",
+    "resolution_time_minutes": 8,
+    "timestamp": "2025-07-08T13:55:00Z"
+  },
+  {
+    "id": "INC-012",
+    "raw_log": "2025-07-10T11:33:21.789Z ERROR [payment-processor-v2] Redis pool timeout: Cannot acquire connection, pool exhausted. Pool: payment-locks (max=15, active=15). Stack trace: redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool at redis.clients.jedis.util.Pool.getResource(Pool.java:50)",
+    "service": "payment-processor-v2",
+    "root_cause": "Redis connection pool timeout - pool exhausted under load (similar to INC-001 and INC-011)",
+    "fix": "Applied learned fix: pool_size=25, exponential backoff retry, connection leak detection",
+    "resolution_time_minutes": 5,
+    "timestamp": "2025-07-10T11:38:00Z"
+  },
+  {
+    "id": "INC-013",
+    "raw_log": "2025-07-12T04:15:55.123Z CRIT [dns-resolver] DNS resolution failure for internal service: payment-processor-v2.internal.paystream.svc.cluster.local. Resolver: 10.100.0.10:53 (kube-dns). NXDOMAIN response. Cached TTL expired. Affected services: api-gateway, notification-worker. Error: Temporary failure in name resolution.",
+    "service": "api-gateway",
+    "root_cause": "DNS resolution failure for internal Kubernetes services due to CoreDNS pod restart causing cache flush",
+    "fix": "Increased CoreDNS replica count from 2 to 3 with pod anti-affinity, enabled negative DNS caching with TTL of 30s, added DNS health check prober",
+    "resolution_time_minutes": 20,
+    "timestamp": "2025-07-12T04:35:00Z"
+  },
+  {
+    "id": "INC-014",
+    "raw_log": "2025-07-14T18:02:11.456Z ERROR [redis-cache-03] Connection refused: redis://redis-cache-03.internal:6379. errno: 111, addr: 10.100.5.22:6379. Client: RedisCluster(nodes=[{'redis-cache-03': '10.100.5.22:6379'}], max_connections=50). Server likely down or unreachable.",
+    "service": "redis-cache-03",
+    "root_cause": "Redis cache node unreachable due to Kubernetes node networking issue",
+    "fix": "Restarted redis-cache-03 pod, added readiness probe with Redis PING command, configured cluster auto-failover with sentinel",
+    "resolution_time_minutes": 14,
+    "timestamp": "2025-07-14T18:16:00Z"
+  },
+  {
+    "id": "INC-015",
+    "raw_log": "2025-07-16T21:44:33.789Z ERROR [auth-service] Rate limit exceeded for JWT token generation: user_id=org_45fe82, client_ip=198.51.100.88, current_rate=152 req/min, limit=100 req/min, window=60s. Token endpoint: /api/v2/auth/token. Possible brute force attack detected.",
+    "service": "auth-service",
+    "root_cause": "Rate limit exceeded on token generation endpoint - potential brute force or misconfigured client",
+    "fix": "Blocked offending IP at WAF level, added exponential backoff on token generation, implemented CAPTCHA challenge after 3 failed attempts",
+    "resolution_time_minutes": 10,
+    "timestamp": "2025-07-16T21:54:00Z"
+  }
+]

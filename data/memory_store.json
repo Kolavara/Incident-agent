@@ -1,0 +1,20 @@
+[
+  {
+    "content": "test error log",
+    "metadata": {
+      "root_cause": "test",
+      "service": "test"
+    },
+    "stored_at": "2026-05-18T16:33:04.083957+00:00"
+  },
+  {
+    "content": "Redis connection pool exhausted in payment service",
+    "metadata": {
+      "root_cause": "Redis connection pool exhausted",
+      "service": "redis",
+      "fix_applied": "Increased max_connections from 100 to 200",
+      "resolved": true
+    },
+    "stored_at": "2026-05-18T16:33:33.240532+00:00"
+  }
+]

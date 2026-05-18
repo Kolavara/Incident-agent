@@ -1,0 +1,24 @@
+models:
+  cheap:
+    name: llama-3.1-8b-instant
+    provider: groq
+    cost_per_1k_input_tokens: 0.00005
+    cost_per_1k_output_tokens: 0.00008
+    max_tokens: 1024
+  powerful:
+    name: qwen/qwen3-32b
+    provider: groq
+    cost_per_1k_input_tokens: 0.00029
+    cost_per_1k_output_tokens: 0.00029
+    max_tokens: 2048
+  local:
+    name: llama3
+    provider: ollama
+    base_url: http://localhost:11434
+    cost_per_1k_input_tokens: 0.0
+    cost_per_1k_output_tokens: 0.0
+
+routing:
+  similarity_threshold_high: 0.8
+  similarity_threshold_mid: 0.5
+  budget_cap_usd: 1.00

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  incident-agent:
+    build: .
+    container_name: incident-agent
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - HINDSIGHT_API_KEY=${HINDSIGHT_API_KEY:-}
+      - HINDSIGHT_PIPELINE_ID=${HINDSIGHT_PIPELINE_ID:-}
+      - BUDGET_CAP_USD=${BUDGET_CAP_USD:-1.00}
+      - SIMILARITY_THRESHOLD_HIGH=${SIMILARITY_THRESHOLD_HIGH:-0.8}
+      - SIMILARITY_THRESHOLD_MID=${SIMILARITY_THRESHOLD_MID:-0.5}
+      - CHEAP_MODEL=${CHEAP_MODEL:-llama3-8b-8192}
+      - POWERFUL_MODEL=${POWERFUL_MODEL:-qwen-qwen3-32b}
+      - LOCAL_MODEL=${LOCAL_MODEL:-llama3}
+    volumes:
+      - ./data:/app/data
+      - ./audit_log.json:/app/audit_log.json
+      - ./logs:/app/logs
+    stdin_open: true
+    tty: true
+    command: python main.py diagnose
+
+  # Optional: Ollama for local fallback
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    profiles:
+      - local
+      - full
+
+volumes:
+  ollama_data:
