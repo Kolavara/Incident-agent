@@ -108,9 +108,21 @@ class GitHubPusher:
             return pr_result
 
         # Step 2: Stage and commit changes
-        if not self._commit_changes(plan):
+        commit_result = self._commit_changes(plan)
+        if commit_result == 'failed':
             pr_result.error = "Failed to commit changes"
             logger.error(pr_result.error)
+            return pr_result
+        if commit_result == 'no_changes':
+            logger.info("No file changes to commit — no pull request needed.")
+            pr_result.success = True
+            pr_result.error = ""
+            pr_result.branch_url = "local://no-changes"
+            pr_result.pr_url = ""
+            # Clean up temp PR body if it exists
+            pr_body_path = self.target_repo / ".pr_body.md"
+            if pr_body_path.exists():
+                pr_body_path.unlink()
             return pr_result
 
         # Step 3: Build PR description
@@ -183,8 +195,14 @@ class GitHubPusher:
             logger.warning(f"Failed to init git: {e}")
             return False
 
-    def _commit_changes(self, plan: RemediationPlan) -> bool:
-        """Stage and commit all file changes in the target repo."""
+    def _commit_changes(self, plan: RemediationPlan) -> str:
+        """Stage and commit file changes in the target repo.
+
+        Returns:
+            'ok' — changes were committed to a new branch
+            'no_changes' — no files were modified (script-only fix)
+            'failed' — git error occurred
+        """
         try:
             # Add all changed files
             subprocess.run(
@@ -198,8 +216,8 @@ class GitHubPusher:
                 capture_output=True, text=True, timeout=10,
             )
             if not status.stdout.strip():
-                logger.info("No changes to commit.")
-                return True
+                logger.info("No changes to commit (script-only fix or already up to date).")
+                return 'no_changes'
 
             # Create branch
             subprocess.run(
@@ -215,11 +233,11 @@ class GitHubPusher:
             )
 
             logger.info(f"Committed changes to branch '{plan.branch_name}'")
-            return True
+            return 'ok'
 
         except subprocess.SubprocessError as e:
             logger.error(f"Git commit failed: {e}")
-            return False
+            return 'failed'
 
     def _push_via_api(self, plan: RemediationPlan, owner: str,
                       repo: str, pr_body: str) -> PRResult:

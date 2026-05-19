@@ -149,11 +149,11 @@ class TestGitHubPusherCommit(unittest.TestCase):
 
     @patch('subprocess.run')
     def test_commit_changes_success(self, mock_run):
-        mock_run.return_value = MagicMock(returncode=0, stdout="")
+        mock_run.return_value = MagicMock(returncode=0, stdout="M modified.txt")
         pusher = GitHubPusher(target_repo_path=self.temp_dir)
         plan = self._make_plan()
         result = pusher._commit_changes(plan)
-        self.assertTrue(result)
+        self.assertEqual(result, 'ok')
 
     @patch('subprocess.run')
     def test_commit_changes_failure(self, mock_run):
@@ -161,7 +161,7 @@ class TestGitHubPusherCommit(unittest.TestCase):
         pusher = GitHubPusher(target_repo_path=self.temp_dir)
         plan = self._make_plan()
         result = pusher._commit_changes(plan)
-        self.assertFalse(result)
+        self.assertEqual(result, 'failed')
 
     @patch('subprocess.run')
     def test_commit_no_changes(self, mock_run):
@@ -176,7 +176,7 @@ class TestGitHubPusherCommit(unittest.TestCase):
         pusher = GitHubPusher(target_repo_path=self.temp_dir)
         plan = self._make_plan()
         result = pusher._commit_changes(plan)
-        self.assertTrue(result)
+        self.assertEqual(result, 'no_changes')
 
 
 class TestGitHubPusherCheckConfig(unittest.TestCase):
@@ -347,7 +347,7 @@ class TestGitHubPusherCreatePR(unittest.TestCase):
     @patch('src.remediation.github_pusher.GitHubPusher._push_via_git')
     def test_create_pr_local_only(self, mock_push, mock_commit, mock_init):
         mock_init.return_value = True
-        mock_commit.return_value = True
+        mock_commit.return_value = 'ok'
         mock_push.return_value = PRResult(
             success=True,
             branch_url="local://fix/INC-014",
