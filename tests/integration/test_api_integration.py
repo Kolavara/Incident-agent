@@ -37,7 +37,7 @@ class TestGroqAPIIntegration(unittest.TestCase):
         """Test basic Groq API connectivity."""
         try:
             router = ModelRouter()
-            client = router.get_client('cheap')
+            client, tier, _ = router.route(0.9)  # High similarity → cheap model
             response = client.generate(
                 system_prompt="You are a helpful assistant.",
                 user_prompt="Say 'Hello from Incident Agent!'",
@@ -46,7 +46,7 @@ class TestGroqAPIIntegration(unittest.TestCase):
             )
             self.assertTrue(len(response.content) > 0)
             self.assertGreater(response.input_tokens, 0)
-            print(f"\nGroq API test: model={response.model_used}, "
+            print(f"\nGroq API test: model={response.model_used}, tier={tier}, "
                   f"cost=${response.cost_usd:.6f}, latency={response.latency_seconds:.2f}s")
         except Exception as e:
             self.fail(f"Groq API connection failed: {e}")

@@ -85,14 +85,17 @@ class VectorStore:
         HINDSIGHT_PIPELINE_ID: Bank/pipeline ID for memory scoping
     """
 
-    def __init__(self):
+    def __init__(self, storage_path: Optional[str] = None):
         self.api_key = os.getenv('HINDSIGHT_API_KEY', '')
         self.base_url = os.getenv('HINDSIGHT_BASE_URL', 'https://api.hindsight.vectorize.io')
         self.pipeline_id = os.getenv('HINDSIGHT_PIPELINE_ID', 'incident-memory-bank')
 
         # Initialize store backend
         self._hindsight_client = None
-        self._local_store = LocalMemoryStore()
+        if storage_path:
+            self._local_store = LocalMemoryStore(data_path=storage_path)
+        else:
+            self._local_store = LocalMemoryStore()
 
         if self.api_key and self.api_key != 'your_hindsight_key':
             self._init_hindsight()

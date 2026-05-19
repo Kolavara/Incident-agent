@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgbouncer-config
+  namespace: paystream-prod
+data:
+  pgbouncer.ini: |
+    [databases]
+    paystream = host=postgres-primary.internal port=5432 dbname=paystream
+
+    [pgbouncer]
+    pool_mode = transaction
+    max_client_conn = 200
+    default_pool_size = 50
+    reserve_pool_size = 10
+    reserve_pool_timeout = 3
+    max_db_connections = 200
+    query_timeout = 10
+    idle_timeout = 600

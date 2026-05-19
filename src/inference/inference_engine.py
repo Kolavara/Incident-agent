@@ -137,6 +137,8 @@ class InferenceEngine:
             'confidence': diagnosis.get('confidence', 'Low'),
             'service': extracted_fields.get('service', 'unknown'),
             'error_type': extracted_fields.get('error_type', 'unknown'),
+            'fix_steps': diagnosis.get('fix_steps', []),
+            'raw_response': response.content,
         }
 
         self.audit_logger.log(audit_entry)

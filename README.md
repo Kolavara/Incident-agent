@@ -1,8 +1,40 @@
 # 🛡️ Incident Response Agent
 
-**AI-powered SRE assistant that diagnoses system failures from error logs and gets smarter over time by remembering past incidents.**
+**AI-powered SRE assistant that diagnoses system failures from error logs, auto-remediates with tested fixes, and pushes PR-ready code to GitHub — getting smarter over time by remembering past incidents.**
 
-Built for DevOps/engineering teams who need fast, cost-effective incident diagnosis. Uses **Hindsight** for persistent memory (so it learns from every resolved incident) and **cascadeflow** for intelligent model routing (so known incidents use cheap models and novel incidents use powerful ones).
+Built for DevOps/engineering teams who need fast, cost-effective incident response. Uses **Hindsight** for persistent memory (so it learns from every resolved incident) and **cascadeflow** for intelligent model routing (so known incidents use cheap models and novel incidents use powerful ones).
+
+---
+
+## The Full Pipeline
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    1.  Detect  ◄──  Error log (any format)          │
+│                    2.  Analyze ◄──  Log + codebase context          │
+│                    3.  Diagnose ◄──  Root cause + fix steps         │
+│                    4.  Plan     ◄──  Generate fix tasks             │
+│                    5.  Fix      ◄──  Apply config/code changes      │
+│                    6.  Test     ◄──  Generate + run validation      │
+│                    7.  Commit   ◄──  Git branch with all changes    │
+│                    8.  Push     ◄──  GitHub branch + PR 🚀          │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### One Command Does It All
+
+```bash
+python main.py remediate          # Steps 4–8: plan → fix → test → commit → push
+python main.py remediate-demo     # Same, using synthetic PayStream incidents
+```
+
+### Or Step by Step
+
+```bash
+python main.py diagnose           # Steps 1–3: log → analysis → root cause
+python main.py remediate-plan     # Preview fix tasks before applying
+python main.py remediate          # Apply fixes, run tests, create PR
+```
 
 ---
 
@@ -15,40 +47,61 @@ Built for DevOps/engineering teams who need fast, cost-effective incident diagno
                          └──────────┬──────────┘
                                     │
                                     ▼
-┌──────────────────────────────────────────────────────────┐
-│                    Inference Engine                       │
-│                                                          │
-│  ┌────────────┐  ┌──────────────┐  ┌─────────────────┐ │
-│  │ Preprocessor│─►│   Retriever  │─►│  Model Router    │ │
-│  │ (clean log) │  │ (find past)  │  │ (cascadeflow)    │ │
-│  └────────────┘  └──────┬───────┘  └────────┬────────┘ │
-│                         │                    │          │
-│                         ▼                    ▼          │
-│  ┌────────────┐  ┌──────────────┐  ┌─────────────────┐ │
-│  │  Indexer   │◄─│  Response    │◄─│  Prompt Builder  │ │
-│  │ (store fix)│  │  Parser      │  │  (template)      │ │
-│  └────────────┘  └──────────────┘  └─────────────────┘ │
-└──────────────────────────┬───────────────────────────────┘
-                           │
-        ┌──────────────────┼──────────────────┐
-        ▼                  ▼                  ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│   Hindsight  │  │    Groq API  │  │   Ollama     │
-│  (memory)    │  │ (LLM Cloud)  │  │ (Local Fallb)│
-│  or local    │  │  cheap/power │  │  $0 cost     │
-│  JSON store  │  │  ~$0-0.03   │  │              │
-└──────────────┘  └──────────────┘  └──────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                         Inference Engine                              │
+│                                                                      │
+│  ┌────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
+│  │ Preprocessor│─►│  Retriever   │─►│ Model Router │─►│  LLM      │ │
+│  │ (clean log) │  │ (find past)  │  │(cascadeflow) │  │  (Groq)   │ │
+│  └────────────┘  └──────┬───────┘  └──────────────┘  └───────────┘ │
+│                         │                                           │
+│                         ▼                                           │
+│  ┌────────────┐  ┌──────────────┐  ┌─────────────────────────────┐ │
+│  │  Indexer   │◄─│  Response    │◄─│  Prompt Builder + Parser    │ │
+│  │ (store fix)│  │  Parser      │  │                             │ │
+│  └────────────┘  └──────────────┘  └─────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────┘
+                                    │
+        ┌───────────────────────────┼───────────────────────────┐
+        ▼                           ▼                           ▼
+┌──────────────┐          ┌──────────────┐          ┌──────────────────┐
+│   Hindsight  │          │    Groq API  │          │  Ollama (Local)  │
+│  (memory)    │          │  (LLM Cloud) │          │  $0 cost fallback│
+│  or local    │          │  $0.001-0.03 │          │                  │
+│  JSON store  │          │  per call    │          │                  │
+└──────────────┘          └──────────────┘          └──────────────────┘
+                                    │
+                                    ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                       Remediation Engine                             │
+│                                                                      │
+│  ┌──────────────┐  ┌──────────┐  ┌────────────┐  ┌───────────────┐ │
+│  │Task Generator│─►│  Fixer   │─►│Test Gen.   │─►│  Validator    │ │
+│  │(rules + LLM) │  │(k8s/code)│  │(pytest)    │  │(8+ tests)     │ │
+│  └──────────────┘  └──────────┘  └────────────┘  └───────┬───────┘ │
+│                                                           │         │
+│  ┌──────────────┐  ┌──────────────┐                      │         │
+│  │GitHub Pusher │◄─│Local Git     │◄─────────────────────┘         │
+│  │(gh CLI/API)  │  │(fixes repo)  │  ┌──────────────────────────┐  │
+│  └──────┬───────┘  └──────────────┘  │  PR created with all     │  │
+│         │                            │  fixes + passing tests!  │  │
+│         └────────────────────────────►  github.com/user/repo/pull│  │
+│                                       └──────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Features
 
-- **🔍 Intelligent Diagnosis**: Paste any error log and get a structured diagnosis with root cause, confidence level, and fix steps
+- **🔍 Intelligent Diagnosis**: Paste any error log and get structured diagnosis with root cause, confidence, and fix steps
 - **🧠 Persistent Memory**: Uses Hindsight (or local JSON fallback) to remember past incidents and their fixes
-- **💰 Cost-Optimized Routing**: cascadeflow automatically routes known incidents to cheap models ($0.001) and novel incidents to powerful ones ($0.031)
-- **🚨 Budget Caps**: Automatically switches to local Ollama when budget limit is hit
+- **💰 Cost-Optimized Routing**: cascadeflow routes known incidents to cheap models (~$0.001) and novel ones to powerful models (~$0.031)
+- **🚨 Budget Caps**: Auto-switches to local Ollama when budget limit is hit
+- **🛠️ Auto-Remediation**: Generates fix tasks, applies config/code changes, runs tests, and creates PR-ready branches
+- **🔗 GitHub Integration**: Pushes fix branches and creates Pull Requests automatically via `gh` CLI or REST API
 - **📊 Audit Trail**: Full transparency with cost tracking, latency monitoring, and incident history
+- **🌐 Web App**: Browser-based UI with real-time diagnosis, cost charts, and remediation pipeline progress
 - **🔌 Offline Mode**: Works entirely offline with local file store — no API keys required for the demo
 
 ---
@@ -60,27 +113,25 @@ Hindsight is a persistent memory layer that stores resolved incidents as vector 
 1. The error log is cleaned and embedded into a vector
 2. Hindsight searches for similar past incidents using cosine similarity
 3. If similarity >= 0.8 → **KNOWN** incident (use cheap model)
-4. If similarity 0.5-0.8 → **PARTIAL MATCH** (use cheap model with verification note)
+4. If similarity 0.5–0.8 → **PARTIAL MATCH** (use cheap model with verification)
 5. If similarity < 0.5 → **NOVEL** incident (use powerful model)
 
-When an engineer marks an incident as resolved, it's stored back into Hindsight with the root cause, fix applied, service, and resolution time. Over time, the agent gets smarter and cheaper.
+When an incident is resolved, it's stored back into Hindsight with root cause, fix applied, service, and resolution time. Over time, the agent gets smarter and cheaper.
 
-**No Hindsight API key?** The system automatically falls back to a local JSON file store (`data/vectordb/memory_store.json`) with keyword-based similarity search.
+**No Hindsight API key?** Falls back to a local JSON file store (`data/memory_store.json`) with keyword-based similarity search.
 
 ---
 
 ## How cascadeflow Routing Works
 
-cascadeflow provides intelligent model routing based on:
-
 | Incident Type | Similarity | Model | Cost per call |
 |---|---|---|---|
 | KNOWN | >= 0.8 | `groq/llama-3.1-8b-instant` | ~$0.001 |
-| PARTIAL | 0.5 - 0.8 | `groq/llama-3.1-8b-instant` | ~$0.001 |
+| PARTIAL | 0.5 – 0.8 | `groq/llama-3.1-8b-instant` | ~$0.001 |
 | NOVEL | < 0.5 | `groq/qwen/qwen3-32b` | ~$0.031 |
 | Budget Exhausted | any | `ollama/llama3` (local) | $0.00 |
 
-**Cost comparison (before vs after):**
+**Cost savings example:**
 
 | Scenario | Before (no memory) | After (with memory) |
 |---|---|---|
@@ -89,14 +140,39 @@ cascadeflow provides intelligent model routing based on:
 
 ---
 
+## How Auto-Remediation Works
+
+When you run `python main.py remediate`, the Remediation Engine executes steps 4–8:
+
+| Step | Component | What It Does |
+|---|---|---|
+| 4. **Plan** | `TaskGenerator` | Maps fix steps to 5 action types: `config_edit`, `code_edit`, `file_create`, `k8s_manifest`, `script_run` |
+| 5. **Fix** | `Fixer` | Applies changes to the target repo (`fixes/paystream/`): edits YAML configs, k8s manifests, or runs kubectl commands |
+| 6. **Test** | `TestGenerator` | Generates pytest files tailored to each fix (network policy tests, config validation, pool health checks) |
+| 7. **Validate** | `Validator` | Runs 8+ validation tests and reports pass/fail |
+| 8. **Push** | `GitHubPusher` | Commits to a feature branch and creates a Pull Request via `gh` CLI (or REST API, or git push fallback) |
+
+### Fix Task Types
+
+| Type | Description | Example |
+|---|---|---|
+| `config_edit` | Modify YAML/JSON config files | Update rate limit, pool size, timeout |
+| `code_edit` | Modify source code files | Fix connection leak, add retry logic |
+| `file_create` | Create new config or test files | Add network policy, generate test |
+| `k8s_manifest` | Update Kubernetes deployment YAMLs | Scale replicas, add probes, update env |
+| `script_run` | Execute a shell command | `kubectl scale deployment`, `restart pod` |
+
+---
+
 ## Quick Start
 
 ### 1. Prerequisites
 
-- Python 3.11+
-- Groq API key (free): https://console.groq.com/keys
-- Hindsight API key (optional, get $50 free with `MEMHACK515`): https://ui.hindsight.vectorize.io
-- Ollama (optional, for local fallback): https://ollama.ai
+- **Python 3.11+**
+- **Groq API key** (free): https://console.groq.com/keys
+- **Hindsight API key** (optional): https://ui.hindsight.vectorize.io
+- **Ollama** (optional, for local fallback): https://ollama.ai
+- **GitHub CLI** (optional, for PR creation): `winget install GitHub.cli`
 
 ### 2. Install
 
@@ -110,25 +186,21 @@ pip install -r requirements.txt
 # Set up environment
 cp .env.example .env
 # Edit .env — set your GROQ_API_KEY for live mode
-# (the offline demo works without any API keys)
 ```
 
-### 3. Run the Demo (Offline — No API Keys Needed)
+### 3. Run the Demo (Offline — No API Keys)
 
 ```bash
 python main.py demo-offline
 ```
 
-This runs a complete simulation showing:
-- How the agent diagnoses incidents
-- How memory matching makes subsequent diagnoses cheaper
-- The audit trail with cost tracking
-
-### 4. Run the Live Demo (Requires GROQ_API_KEY)
+### 4. Run the Full Remediation Demo
 
 ```bash
-python main.py demo
+python main.py remediate-demo
 ```
+
+This runs the entire pipeline on 3 synthetic PayStream incidents, applies fixes, runs tests, commits, and pushes PRs to GitHub.
 
 ### 5. Diagnose a Real Incident
 
@@ -144,45 +216,123 @@ Paste your error log and press Ctrl+D (or type END on a new line).
 
 | Command | Description |
 |---|---|
+| **Diagnosis & Memory** |
 | `python main.py diagnose` | Paste an error log and get structured diagnosis |
+| `python main.py diagnose-mock` | Offline simulated diagnosis (no API calls) |
 | `python main.py resolve` | Mark last incident as resolved (stores in memory) |
 | `python main.py history` | Show all past incidents stored in memory |
 | `python main.py audit` | Show full audit trail with costs and latency |
-| `python main.py demo` | Run automated demo with synthetic data (requires API key) |
-| `python main.py demo-offline` | Run demo without API calls (simulated) |
+| **Demo** |
+| `python main.py demo` | Run automated diagnosis demo (requires API key) |
+| `python main.py demo-offline` | Run diagnosis demo without API calls |
+| **Remediation** |
+| `python main.py remediate` | Full pipeline: plan → fix → test → PR → push |
+| `python main.py remediate-plan` | Show remediation plan without applying changes |
+| `python main.py remediate-demo` | Demo auto-remediation on synthetic incidents |
 
 ---
 
-## Example Output
+## GitHub Integration
+
+The `GitHubPusher` supports 3 methods in priority order:
+
+| Method | Requires | Status |
+|---|---|---|
+| `gh` CLI | `gh` installed + authenticated | ✅ Creates PRs automatically |
+| REST API | PAT with `Contents: write` + `Pull requests: write` | ✅ Creates PRs automatically |
+| Git Push | Any auth method | ✅ Pushes branches + provides PR URLs |
+
+### Setup
+
+```bash
+# 1. Install GitHub CLI
+winget install GitHub.cli
+
+# 2. Authenticate with your PAT
+echo $GITHUB_TOKEN | gh auth login --with-token
+
+# 3. Or set in .env
+GITHUB_TOKEN=github_pat_...
+GITHUB_REPO_OWNER=your-username
+GITHUB_REPO_NAME=paystream-infra
+```
+
+The **fine-grained PAT needs** these permissions on the target repo:
+- **Contents**: Read and write
+- **Pull requests**: Read and write
+- **Metadata**: Read (auto-granted)
+
+---
+
+## Web App
+
+The project includes a browser-based UI built with FastAPI (backend) and React/Vite (frontend).
+
+```bash
+# Start both servers
+bash start.sh
+
+# Or manually:
+# Backend:  http://localhost:8000
+cd backend && uvicorn main:app --reload --port 8000
+
+# Frontend: http://localhost:5173
+cd frontend && npm run dev
+```
+
+---
+
+## Example Diagnosis Output
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    INCIDENT DIAGNOSIS #INC-011                   │
+│                    INCIDENT DIAGNOSIS #2993b24e                  │
 ├─────────────────────────────────────────────────────────────────┤
-│ Status    : ⚡ KNOWN INCIDENT (memory match)                     │
-│ Incident ID: INC-011                                            │
-│ Similarity : 95.00%                                             │
-│ Model      : llama3-8b-8192 (cheap)                             │
-│ Cost       : $0.001000                                          │
-│ Latency    : 0.9s                                               │
+│ Status    : [?] PARTIAL MATCH (verify suggested)                │
+│ Incident ID: 2993b24e                                           │
+│ Similarity: 50.00%                                              │
+│ Model      : llama-3.1-8b-instant (cheap)                      │
+│ Cost       : $0.000040                                          │
+│ Latency    : 1.6s                                               │
 │                                                                 │
-│ KNOWN incident (similarity=0.95) - using cheap model            │
+│ PARTIAL incident (similarity=0.50) - using cheap model          │
 │                                                                 │
-│ ROOT CAUSE: Redis connection pool exhausted due to payment spike│
+│ ROOT CAUSE: auth-service rate limit exceeded on JWT             │
+│ token generation endpoint — possible brute force attack         │
+│                                                                 │
 │ CONFIDENCE: High                                                │
 │                                                                 │
 │ FIX STEPS:                                                      │
-│   1. Set CONNECTION_POOL_SIZE=25 in ConfigMap                   │
-│   2. kubectl rollout restart deploy/payment-processor-v2        │
-│   3. Monitor redis-03 connections for 5 minutes                 │
-│                                                                 │
-│ NOTES: This exact issue occurred on INC-003. Resolution took 8  │
-│ minutes last time.                                              │
+│   1. Review/adjust auth-service rate limiting config            │
+│   2. Implement Leaky Bucket algorithm for brute force           │
+│   3. Add IP blocking + user-ID based rate limiting              │
 │                                                                 │
 │ Past incidents in context:                                      │
-│   • Redis connection pool exhausted (sim: 95%)                  │
-│   • Redis pool timeout (sim: 82%)                               │
+│   • JWT token expiry (sim: 50%)                                 │
+│   • JWT token validation failure (sim: 50%)                     │
 └─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Example Remediation Result
+
+```
+┌────────────────── REMEDIATION RESULT ──────────────────┐
+│                                                         │
+│  Tasks: 1 total                                         │
+│    Applied: 1                                           │
+│                                                         │
+│  Validation: PASSED                                     │
+│    8/8 tests passed                                     │
+│                                                         │
+│  Pull Request: Created 🎉                               │
+│    URL: https://github.com/user/repo/pull/4              │
+│                                                         │
+│  Changes applied in: fixes/paystream/                   │
+│    → k8s/network-policies/restrict-payment-access.yaml  │
+│      (IP blocking + rate limiting)                      │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -195,9 +345,7 @@ incident-agent/
 │   ├── model_config.yaml         # Model definitions & routing config
 │   └── logging_config.yaml       # Logging configuration
 ├── data/
-│   ├── cache/                    # Cached data
-│   ├── embeddings/               # Pre-computed embeddings
-│   ├── vectordb/                 # Local memory store
+│   ├── memory_store.json         # Local incident memory store
 │   └── demo_incidents.json       # 15 synthetic PayStream incidents
 ├── src/
 │   ├── core/                     # LLM clients & model routing
@@ -208,45 +356,55 @@ incident-agent/
 │   ├── prompts/
 │   │   ├── templates.py          # Diagnosis prompt templates
 │   │   └── chain.py              # Multi-step reasoning chain
-│   ├── rag/                      # Retrieval-Augmented Generation
+│   ├── processing/
+│   │   ├── preprocessor.py       # Log cleaning & field extraction
+│   │   ├── tokenizer.py          # Token counting & cost estimation
+│   │   └── chunking.py           # Large log splitting
+│   ├── rag/
 │   │   ├── vector_store.py       # Hindsight/local memory wrapper
 │   │   ├── embedder.py           # Log-to-embedding conversion
 │   │   ├── retriever.py          # Memory search & classification
 │   │   └── indexer.py            # Store resolved incidents
-│   ├── processing/               # Input processing pipeline
-│   │   ├── preprocessor.py       # Log cleaning & field extraction
-│   │   ├── tokenizer.py          # Token counting & cost estimation
-│   │   └── chunking.py           # Large log splitting
-│   └── inference/
-│       ├── inference_engine.py   # Main agent loop
-│       └── response_parser.py    # Structured output parsing
-├── tests/                        # Unit & integration tests
-├── scripts/                      # Utility scripts
+│   ├── inference/
+│   │   ├── inference_engine.py   # Main agent loop
+│   │   └── response_parser.py    # Structured output parsing
+│   └── remediation/              # Auto-remediation pipeline
+│       ├── engine.py             # Orchestrates steps 4–8
+│       ├── task_generator.py     # Maps fix steps to actionable tasks
+│       ├── fixer.py              # Applies config/code/k8s changes
+│       ├── test_generator.py     # Generates pytest validation files
+│       ├── validator.py          # Runs tests and reports results
+│       ├── github_pusher.py      # Git commit + GitHub PR creation
+│       └── models.py             # Data models (FixTask, FixPlan, etc.)
+├── backend/                      # FastAPI web backend
+│   ├── main.py                   # API endpoints: diagnose, history, etc.
+│   └── fixes/paystream/          # PayStream demo infra config
+├── frontend/                     # React + Vite web frontend
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── IncidentTable.tsx
+│   │   │   ├── DiagnosisPanel.tsx
+│   │   │   ├── PipelineProgress.tsx
+│   │   │   └── CostChart.tsx
+│   │   └── services/api.ts
+│   └── index.html
+├── fixes/paystream/              # Target repo for auto-remediation
+│   ├── configs/                  # Service configs (Redis, Postgres, etc.)
+│   ├── k8s/                      # Kubernetes manifests
+│   ├── src/                      # Service source code
+│   └── tests/                    # Validation test suites
+├── tests/
+│   ├── unit/                     # Unit tests (LLM, prompts, remediation)
+│   └── integration/              # Integration tests (API, end-to-end)
 ├── main.py                       # CLI entry point
 ├── audit_log.py                  # Audit trail display
 ├── logging_config.py             # Logging setup
-├── .env.example                  # Environment variables template
+├── start.sh                      # Web app launcher
+├── pytest.ini                    # Test configuration
 ├── Dockerfile                    # Container build
 ├── docker-compose.yml            # Multi-service setup
-├── requirements.txt              # Python dependencies
-└── README.md                     # This file
+└── requirements.txt              # Python dependencies
 ```
-
----
-
-## Error Handling
-
-The agent handles these scenarios gracefully:
-
-| Scenario | Behavior |
-|---|---|
-| Groq API rate limit | Retries with exponential backoff (max 3 retries) |
-| Hindsight connection failure | Warns and proceeds with local JSON store |
-| Budget cap reached | Switches to Ollama, logs the switch |
-| Ollama not running | Asks user to start it, offers to proceed with powerful model |
-| Empty/too-short input | Asks user to provide more detail |
-| Hindsight returns zero matches | Proceeds as NOVEL incident |
-| Malformed model response | Retries once, then returns raw response |
 
 ---
 
@@ -255,10 +413,13 @@ The agent handles these scenarios gracefully:
 | Variable | Default | Required | Description |
 |---|---|---|---|
 | `GROQ_API_KEY` | — | Yes* | Groq API key for LLM calls |
-| `HINDSIGHT_API_KEY` | — | No | Hindsight API key for persistent memory |
+| `HINDSIGHT_API_KEY` | — | No | Hindsight API key for vector memory |
 | `HINDSIGHT_BASE_URL` | `https://api.hindsight.vectorize.io` | No | Hindsight API base URL |
 | `HINDSIGHT_PIPELINE_ID` | `incident-memory-bank` | No | Hindsight pipeline/bank ID |
-| `BUDGET_CAP_USD` | `1.00` | No | Maximum spend before switching to Ollama |
+| `GITHUB_TOKEN` | — | No | GitHub PAT for PR creation |
+| `GITHUB_REPO_OWNER` | — | No | GitHub username/org for fixes repo |
+| `GITHUB_REPO_NAME` | `paystream-infra` | No | GitHub repo name for fixes |
+| `BUDGET_CAP_USD` | `1.00` | No | Max spend before Ollama fallback |
 | `CHEAP_MODEL` | `groq/llama-3.1-8b-instant` | No | Model for known/partial incidents |
 | `POWERFUL_MODEL` | `groq/qwen/qwen3-32b` | No | Model for novel incidents |
 | `LOCAL_MODEL` | `ollama/llama3` | No | Ollama model for budget fallback |
@@ -268,35 +429,50 @@ The agent handles these scenarios gracefully:
 
 ---
 
+## Running Tests
+
+```bash
+# All tests
+python -m pytest tests/ -v
+
+# Unit tests only
+python -m pytest tests/unit/ -v
+
+# Remediation-specific tests
+python -m pytest tests/unit/test_remediation_*.py -v
+
+# Integration tests (requires API keys)
+python -m pytest tests/integration/ -v
+```
+
+---
+
 ## Docker
 
 ```bash
-# Build and run
+# Build and run CLI
 docker build -t incident-agent .
 docker run -it --env-file .env incident-agent python main.py diagnose
 
-# Or with docker-compose (with Ollama for local fallback)
+# With docker-compose (includes Ollama for local fallback)
 docker compose --profile local up -d
 docker compose exec incident-agent python main.py diagnose
 ```
 
 ---
 
-## Running Tests
+## Error Handling
 
-```bash
-# Run all tests
-python -m pytest tests/ -v
-
-# Run unit tests only
-python -m pytest tests/unit/ -v
-
-# Run integration tests (requires API keys)
-python -m pytest tests/integration/ -v
-
-# Check import compatibility
-python scripts/run_tests.sh
-```
+| Scenario | Behavior |
+|---|---|
+| Groq API rate limit | Retries with exponential backoff (max 3 retries) |
+| Hindsight connection failure | Warns and proceeds with local JSON store |
+| Budget cap reached | Switches to Ollama, logs the switch |
+| Ollama not running | Asks user to start it, offers to proceed with powerful model |
+| Empty/too-short input | Asks user to provide more detail |
+| Hindsight returns zero matches | Proceeds as NOVEL incident |
+| GitHub API push fails | Falls back to git push + PR URL generation |
+| `gh` CLI not available | Falls back to REST API, then git push |
 
 ---
 

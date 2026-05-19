@@ -16,6 +16,16 @@ import logging
 from pathlib import Path
 from typing import Dict, Any
 
+# Fix Windows console encoding before anything else
+# On Windows cmd (cp1252), Unicode characters like → crash RichHandler
+if sys.platform == 'win32':
+    for _stream in [sys.stdout, sys.stderr]:
+        if _stream and hasattr(_stream, 'reconfigure'):
+            try:
+                _stream.reconfigure(encoding='utf-8', errors='backslashreplace')
+            except Exception:
+                pass
+
 from dotenv import load_dotenv
 from rich.console import Console
 from rich.panel import Panel
@@ -41,6 +51,8 @@ from src.core.model_factory import ModelRouter
 from src.inference.inference_engine import InferenceEngine
 from src.inference.response_parser import ResponseParser
 from audit_log import AuditLogger
+from src.remediation.engine import RemediationEngine
+from src.remediation.models import FixStatus
 
 logger = logging.getLogger('incident_agent.cli')
 console = Console()
@@ -585,24 +597,389 @@ def cmd_demo_offline():
     )
 
 
+def _load_last_diagnosis():
+    """Load the most recent unresolved diagnosis from the audit log.
+
+    Returns:
+        Dict with diagnosis_result fields, or None if nothing found
+    """
+    audit_logger = AuditLogger()
+    entries = audit_logger.get_all()
+
+    # Find the most recent unresolved entry
+    for entry in reversed(entries):
+        if not entry.get('resolved', False):
+            return _build_diagnosis_result(entry)
+
+    return None
+
+
+def _build_diagnosis_result(entry: Dict[str, Any]) -> Dict[str, Any]:
+    """Build a diagnosis_result dict from an audit log entry.
+
+    Args:
+        entry: An audit log entry dict
+
+    Returns:
+        Dict compatible with InferenceEngine.diagnose() output
+    """
+    result = {
+        'incident_id': entry.get('incident_id', 'UNKNOWN'),
+        'incident_type': entry.get('incident_type', 'NOVEL'),
+        'diagnosis': {
+            'root_cause': entry.get('root_cause', ''),
+            'confidence': entry.get('confidence', 'Medium'),
+            'fix_steps': [],
+            'notes': '',
+        },
+        'extracted_fields': {
+            'service': entry.get('service', 'unknown'),
+            'error_type': entry.get('error_type', 'unknown'),
+        },
+    }
+
+    # Prefer direct fix_steps from the entry (most reliable)
+    direct_steps = entry.get('fix_steps', [])
+    if direct_steps:
+        result['diagnosis']['fix_steps'] = direct_steps
+    else:
+        # Fallback: parse fix steps from the raw LLM response
+        raw_response = entry.get('raw_response', '')
+        if raw_response:
+            parser = ResponseParser()
+            parsed = parser.parse_diagnosis(raw_response)
+            result['diagnosis']['fix_steps'] = parsed.get('fix_steps', [])
+            result['diagnosis']['notes'] = parsed.get('notes', '')
+
+    return result
+
+
+def cmd_remediate():
+    """Run the full remediation pipeline on the last diagnosis result.
+
+    Steps 5-10:
+    5. Generate implementation tasks from fix steps
+    6. Generate validation tests
+    7. Implement fixes in the target repo
+    8. Run validation tests
+    9. Create PR-ready code (local git branch)
+    10. Push to GitHub (if configured)
+    """
+    diagnosis_result = _load_last_diagnosis()
+
+    if not diagnosis_result:
+        # Fallback: try using last demo incident
+        try:
+            demo_path = "data/demo_incidents.json"
+            if Path(demo_path).exists():
+                with open(demo_path, 'r') as f:
+                    demo_data = json.load(f)
+                if demo_data:
+                    last_entry = demo_data[-1]
+                    console.print("[yellow]No recent diagnosis found. Using last demo incident.[/yellow]")
+                    # Build a minimal diagnosis_result from demo data
+                    diagnosis_result = {
+                        'incident_id': last_entry.get('id', 'INC-DEMO'),
+                        'incident_type': 'KNOWN',
+                        'diagnosis': {
+                            'root_cause': last_entry.get('root_cause', ''),
+                            'confidence': 'High',
+                            'fix_steps': [last_entry.get('fix', 'Apply standard fix')],
+                            'notes': '',
+                        },
+                        'extracted_fields': {
+                            'service': last_entry.get('service', 'unknown'),
+                            'error_type': 'unknown',
+                        },
+                    }
+        except (json.JSONDecodeError, IOError):
+            pass
+
+    if not diagnosis_result:
+        console.print("[red]No recent diagnosis found. Run 'diagnose' first, or use 'remediate-demo'.[/red]")
+        return
+
+    root_cause = diagnosis_result.get('diagnosis', {}).get('root_cause', 'Unknown')
+
+    console.print(
+        Panel.fit(
+            f"[bold cyan]>> Remediation Pipeline (Steps 5-10) <<[/bold cyan]\n"
+            f"[dim]Auto-remediating: {root_cause[:60]}[/dim]",
+            box=box.ROUNDED,
+        )
+    )
+
+    if not diagnosis_result['diagnosis']['fix_steps']:
+        console.print("[yellow]No fix steps found in the diagnosis. Cannot generate remediation plan.[/yellow]")
+        return
+
+    try:
+        engine = RemediationEngine()
+
+        with console.status("[bold cyan]Running remediation pipeline...", spinner="dots") as status:
+            status.update("[cyan]Step 5/10: Generating implementation tasks...")
+            plan = engine.plan(diagnosis_result)
+
+            if not plan.tasks:
+                console.print("[red]Could not generate any fix tasks from the diagnosis.[/red]")
+                return
+
+            # Display plan
+            console.print()
+            _display_remediation_plan(plan)
+
+            # Confirm before proceeding
+            if not Prompt.ask("\n[bold]Apply these fixes?[/bold]", choices=["y", "n"], default="n") == "y":
+                console.print("[yellow]Remediation cancelled.[/yellow]")
+                return
+
+            # Steps 6-7: Apply fixes and generate tests
+            status.update("[cyan]Steps 6-7: Applying fixes and generating tests...")
+            engine.apply(plan)
+
+            # Step 8: Validate
+            status.update("[cyan]Step 8: Running validation tests...")
+            validation = engine.validate(plan)
+
+            # Steps 9-10: Create PR and push
+            status.update("[cyan]Steps 9-10: Creating PR and pushing...")
+            pr_result = engine.create_pr(plan)
+
+        # Show results
+        console.print()
+        _display_remediation_result(plan, validation, pr_result)
+
+    except Exception as e:
+        console.print(f"[red]Remediation failed: {e}[/red]")
+        logger.exception("Remediation failed")
+
+
+def cmd_remediate_plan():
+    """Generate and display a remediation plan without applying changes."""
+    diagnosis_result = _load_last_diagnosis()
+
+    if not diagnosis_result:
+        console.print("[yellow]No recent diagnosis found. Run 'diagnose' first.[/yellow]")
+        return
+
+    if not diagnosis_result['diagnosis']['fix_steps']:
+        console.print("[yellow]No fix steps found in the diagnosis.[/yellow]")
+        return
+
+    engine = RemediationEngine()
+    plan = engine.plan(diagnosis_result)
+
+    if plan.tasks:
+        _display_remediation_plan(plan)
+        console.print(f"\n[dim]Run 'remediate' to apply these fixes.[/dim]")
+    else:
+        console.print("[yellow]Could not generate any fix tasks.[/yellow]")
+
+
+def cmd_remediate_demo():
+    """Run the full remediation pipeline on demo incidents.
+
+    Demonstrates steps 5-10 end-to-end using the demo incidents.
+    """
+    demo_path = "data/demo_incidents.json"
+    try:
+        with open(demo_path, 'r') as f:
+            demo_incidents = json.load(f)
+    except FileNotFoundError:
+        console.print(f"[red]Demo data not found at {demo_path}[/red]")
+        return
+
+    if not demo_incidents:
+        console.print("[red]No demo incidents loaded![/red]")
+        return
+
+    console.print(Panel.fit(
+        "[bold cyan]>> Remediation Demo (Steps 5-10) <<[/bold cyan]\n"
+        "[dim]Demonstrating auto-remediation on PayStream incidents...[/dim]",
+        box=box.ROUNDED,
+    ))
+
+    engine = RemediationEngine()
+
+    # Use the last 3 demo incidents (varied types)
+    demo_indices = [12, 13, 14]  # 0-indexed
+
+    for idx in demo_indices:
+        if idx >= len(demo_incidents):
+            continue
+
+        incident = demo_incidents[idx]
+        console.print(f"\n[bold]" + "-" * 50)
+        console.print(f"[bold]>> Remediating: {incident.get('id', f'INC-{idx+1:03d}')}[/bold]")
+        console.print(f"[dim]{incident.get('root_cause', '')}[/dim]")
+        console.print(f"[bold]" + "-" * 50)
+
+        # Build a diagnosis result for the demo
+        fix_steps = [incident.get('fix', 'Apply standard fix')]
+
+        diagnosis_result = {
+            'incident_id': incident.get('id', f'INC-{idx+1:03d}'),
+            'incident_type': 'KNOWN' if idx <= 12 else 'NOVEL',
+            'diagnosis': {
+                'root_cause': incident.get('root_cause', ''),
+                'confidence': 'High',
+                'fix_steps': fix_steps,
+                'notes': f"Auto-remediation for {incident.get('service', 'unknown')}",
+            },
+            'extracted_fields': {
+                'service': incident.get('service', 'unknown'),
+                'error_type': 'connection_pool_exhausted' if 'redis' in incident.get('root_cause', '').lower() else 'unknown',
+            },
+        }
+
+        try:
+            # Step 5: Plan
+            with console.status("[cyan]Generating remediation plan...", spinner="dots"):
+                plan = engine.plan(diagnosis_result)
+
+            if plan.tasks:
+                console.print(f"[green]  [OK] Generated {len(plan.tasks)} fix task(s)")
+                for t in plan.tasks:
+                    console.print(f"    - {t.description[:60]} ({t.change_type.value})")
+
+                # Steps 6-7: Apply + tests
+                with console.status("[cyan]Applying fixes...", spinner="dots"):
+                    engine.apply(plan)
+
+                applied = sum(1 for t in plan.tasks if t.status == FixStatus.APPLIED)
+                console.print(f"[green]  [OK] Applied {applied} fix task(s)")
+
+                # Step 8: Validate
+                with console.status("[cyan]Running validation...", spinner="dots"):
+                    v = engine.validate(plan)
+
+                v_status = "[green][PASS]" if v.passed else "[red][FAIL]"
+                console.print(f"  {v_status} ({v.passed_tests}/{v.total_tests} tests passed)")
+
+                # Steps 9-10: PR
+                with console.status("[cyan]Creating PR...", spinner="dots"):
+                    pr = engine.create_pr(plan)
+
+                if pr.success:
+                    console.print(f"[green]  [OK] PR ready: {pr.pr_url or 'local branch'}[/green]")
+                else:
+                    console.print(f"[yellow]  ! PR creation: {pr.error or 'local only'}[/yellow]")
+            else:
+                console.print("[yellow]  ! No tasks generated (unmatched fix pattern)[/yellow]")
+
+        except Exception as e:
+            console.print(f"[red]  [ERR] Error: {e}[/red]")
+
+    console.print(f"\n[bold cyan]Demo Remediation Complete![/bold cyan]")
+    console.print(f"[dim]All changes committed to local git branches in fixes/paystream/[/dim]")
+    console.print(f"[dim]Set GITHUB_TOKEN to enable automatic PR creation on GitHub.[/dim]")
+
+
+def _display_remediation_plan(plan):
+    """Display a remediation plan in a rich panel."""
+    lines = []
+    lines.append(f"[bold]Branch:[/bold] {plan.branch_name}")
+    lines.append(f"[bold]PR Title:[/bold] {plan.pr_title}")
+    lines.append("")
+    lines.append("[bold]Fix Tasks:[/bold]")
+
+    for i, task in enumerate(plan.tasks, 1):
+        type_icon = {
+            'config_edit': '[CONFIG]',
+            'code_edit': '[CODE]',
+            'file_create': '[NEW]',
+            'k8s_manifest': '[K8S]',
+            'script_run': '[EXEC]',
+        }.get(task.change_type.value, '[FIX]')
+
+        lines.append(f"  {i}. {type_icon} {task.description}")
+        if task.file_path:
+            lines.append(f"     [dim]File: {task.file_path}[/dim]")
+        if task.command:
+            lines.append(f"     [dim]Command: {task.command}[/dim]")
+
+    panel = Panel(
+        '\n'.join(lines),
+        title=f"[bold]REMEDIATION PLAN #{plan.incident_id}[/bold]",
+        border_style="green",
+        box=box.ROUNDED,
+        padding=(1, 2),
+    )
+    console.print(panel)
+
+
+def _display_remediation_result(plan, validation, pr_result):
+    """Display the final remediation result."""
+    # Task summary
+    total = len(plan.tasks)
+    applied = sum(1 for t in plan.tasks if t.status == FixStatus.APPLIED)
+    failed = sum(1 for t in plan.tasks if t.status == FixStatus.FAILED)
+    skipped = sum(1 for t in plan.tasks if t.status == FixStatus.SKIPPED)
+
+    lines = []
+    lines.append(f"[bold]Tasks:[/bold] {total} total")
+    lines.append(f"[green]  Applied: {applied}[/green]")
+    if failed:
+        lines.append(f"[red]  Failed: {failed}[/red]")
+    if skipped:
+        lines.append(f"[yellow]  Skipped: {skipped}[/yellow]")
+    lines.append("")
+
+    # Validation summary
+    v_text = "PASSED" if validation.passed else "FAILED"
+    v_color = "green" if validation.passed else "red"
+    lines.append(f"[bold]Validation:[/bold] [{v_color}]{v_text}[/{v_color}]")
+    lines.append(f"  {validation.passed_tests}/{validation.total_tests} tests passed")
+    lines.append("")
+
+    # PR summary
+    if pr_result and pr_result.success:
+        lines.append(f"[bold]Pull Request:[/bold] [green]Created[/green]")
+        if pr_result.pr_url:
+            lines.append(f"  URL: {pr_result.pr_url}")
+        if pr_result.branch_url:
+            lines.append(f"  Branch: {pr_result.branch_url}")
+    else:
+        lines.append(f"[bold]Pull Request:[/bold] [yellow]Local only[/yellow]")
+        lines.append(f"  Branch: {plan.branch_name}")
+        lines.append(f"  [dim]Set GITHUB_TOKEN env var for auto-push[/dim]")
+
+    panel = Panel(
+        '\n'.join(lines),
+        title="[bold]REMEDIATION RESULT[/bold]",
+        border_style="blue",
+        box=box.ROUNDED,
+        padding=(1, 2),
+    )
+    console.print(panel)
+
+    # Show diff hint
+    diff_path = Path("fixes/paystream/")
+    console.print(f"\n[dim]Changes applied in: {diff_path.resolve()}[/dim]")
+
+
 def main():
     """Main CLI entry point."""
     console.print(Panel.fit(
         "[bold cyan]>> Incident Response Agent <<[/bold cyan]\n"
-        "[dim]AI-powered SRE assistant with persistent memory[/dim]",
+        "[dim]AI-powered SRE assistant with persistent memory and auto-remediation[/dim]",
         box=box.ROUNDED,
     ))
 
     if len(sys.argv) < 2:
         console.print("\n[bold]Commands:[/bold]")
-        console.print("  [cyan]diagnose[/cyan]    Paste/type an error log and get a diagnosis")
-        console.print(  "  [cyan]diagnose-mock[/cyan]  Diagnose using offline simulation (no API key needed)")
-        console.print("  [cyan]resolve[/cyan]     Mark the last diagnosed incident as resolved")
-        console.print("  [cyan]history[/cyan]     Show all past incidents stored in memory")
-        console.print("  [cyan]audit[/cyan]       Show the full audit trail table")
-        console.print("  [cyan]demo[/cyan]        Run the automated demo (requires API keys)")
-        console.print("  [cyan]demo-offline[/cyan] Run demo without API calls (simulated)")
-        console.print("\nExample: python main.py diagnose")
+        console.print("  [cyan]diagnose[/cyan]        Paste/type an error log and get a diagnosis")
+        console.print("  [cyan]diagnose-mock[/cyan]    Diagnose via offline simulation")
+        console.print("  [cyan]resolve[/cyan]         Mark the last diagnosis as resolved (stores in memory)")
+        console.print("  [cyan]history[/cyan]         Show all past incidents stored in memory")
+        console.print("  [cyan]audit[/cyan]           Show the full audit trail table")
+        console.print("  [cyan]demo[/cyan]            Run the automated diagnosis demo (requires API keys)")
+        console.print("  [cyan]demo-offline[/cyan]    Run diagnosis demo without API calls")
+        console.print("\n[bold]Remediation Commands (Steps 5-10):[/bold]")
+        console.print("  [cyan]remediate[/cyan]        Run full remediation: plan → fix → test → PR → push")
+        console.print("  [cyan]remediate-plan[/cyan]   Show remediation plan without applying changes")
+        console.print("  [cyan]remediate-demo[/cyan]   Demo auto-remediation on synthetic incidents")
+        console.print("\nExample: python main.py remediate")
         return
 
     command = sys.argv[1].lower()
@@ -615,13 +992,16 @@ def main():
         'audit': cmd_audit,
         'demo': cmd_demo,
         'demo-offline': cmd_demo_offline,
+        'remediate': cmd_remediate,
+        'remediate-plan': cmd_remediate_plan,
+        'remediate-demo': cmd_remediate_demo,
     }
 
     if command in commands:
         commands[command]()
     else:
         console.print(f"[red]Unknown command: {command}[/red]")
-        console.print("Available: diagnose, resolve, history, audit, demo, demo-offline")
+        console.print("Available: diagnose, resolve, history, audit, demo, demo-offline, remediate, remediate-plan, remediate-demo")
 
 
 if __name__ == '__main__':

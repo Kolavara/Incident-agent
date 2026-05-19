@@ -79,8 +79,9 @@ NOTES: This affects write operations only"""
 
     def test_parse_malformed_response(self):
         result = self.parser.parse_diagnosis("This is a random response without the expected format.")
-        self.assertEqual(result['root_cause'], '')
-        self.assertEqual(result['confidence'], 'Low')
+        # Parser falls back to first sentence as root cause
+        self.assertEqual(result['root_cause'], 'This is a random response without the expected format.')
+        self.assertEqual(result['confidence'], 'Medium')
 
     def test_parse_partial_response(self):
         response = """ROOT CAUSE: Redis connection timeout

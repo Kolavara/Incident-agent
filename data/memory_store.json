@@ -16,5 +16,364 @@
       "resolved": true
     },
     "stored_at": "2026-05-18T16:33:33.240532+00:00"
+  },
+  {
+    "content": "2025-06-15T14:23:11.456Z ERROR [payment-processor-v2] Redis connection pool exhausted: pool_size=10, active=10, waiting=12, timeout=2000ms. Stack: com.paystream.redis.RedisPoolManager.acquire(Main.java:134) ~[pool-4-thread-1] at com.paystream.payment.TransactionHandler.processPayment(TransactionHandler.java:89)",
+    "metadata": {
+      "root_cause": "Redis connection pool exhausted due to payment spike",
+      "fix_applied": "Increased CONNECTION_POOL_SIZE from 10 to 25, added connection timeout retry logic",
+      "service": "payment-processor-v2",
+      "resolved": true,
+      "resolution_time_minutes": 8,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-15T14:31:00Z"
+    },
+    "stored_at": "2026-05-19T15:07:58.823899+00:00"
+  },
+  {
+    "content": "2025-06-16T09:45:33.789Z FATAL [postgres-primary] FATAL: remaining connection slots are reserved for non-replication superuser connections. PID: 28473, Query: SELECT * FROM transactions WHERE user_id = ? AND status = 'pending' LIMIT 100. Connection count: 197/200.",
+    "metadata": {
+      "root_cause": "PostgreSQL max connections reached due to unclosed connection pools from API servers",
+      "fix_applied": "Reduced pg_bouncer max_connections from 200 to 300, fixed connection leak in api-gateway pool release logic",
+      "service": "postgres-primary",
+      "resolved": true,
+      "resolution_time_minutes": 22,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-16T10:07:00Z"
+    },
+    "stored_at": "2026-05-19T15:07:59.132058+00:00"
+  },
+  {
+    "content": "2025-06-18T22:11:45.123Z WARN [redis-cache-03] OOM command not allowed when used memory > 'maxmemory'. Used: 512MB/512MB. Keys evicted: 1432 in last 60s. LRU eviction rate critical. Top keys by memory: session:* (45%), payment:lock:* (30%), cache:* (25%).",
+    "metadata": {
+      "root_cause": "Redis maxmemory limit reached causing mass eviction of session data",
+      "fix_applied": "Increased maxmemory to 1GB, added TTL enforcement on session keys, implemented key expiration policy for payment locks",
+      "service": "redis-cache-03",
+      "resolved": true,
+      "resolution_time_minutes": 15,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-18T22:26:00Z"
+    },
+    "stored_at": "2026-05-19T15:07:59.434383+00:00"
+  },
+  {
+    "content": "2025-06-20T03:33:22.001Z ERROR [auth-service] JWT token validation failed: token_expired. Token: eyJhbGciOiJSUzI1NiIsImtpZCI6InByb2QtdjIifQ. User: user_8a3f2c, Client IP: 203.0.113.42, User-Agent: PayStreamApp/3.2.1 (iOS 18.1). Expired at: 2025-06-20T03:28:00Z, Now: 2025-06-20T03:33:22Z.",
+    "metadata": {
+      "root_cause": "JWT token expiry not handled gracefully by auth-service token refresh logic",
+      "fix_applied": "Updated token refresh endpoint to return 401 with retry_after header, added auto-refresh on client side for tokens expiring within 5 minutes",
+      "service": "auth-service",
+      "resolved": true,
+      "resolution_time_minutes": 12,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-20T03:45:00Z"
+    },
+    "stored_at": "2026-05-19T15:07:59.706956+00:00"
+  },
+  {
+    "content": "2025-06-22T11:05:17.456Z CRIT [api-gateway] 502 Bad Gateway | upstream_response_time: 30002ms | upstream: \"https://payment-processor-v2.internal:8080/api/v2/process\" | request_id: req_b7e91a3f | client_ip: 198.51.100.23 | method: POST | path: /api/v2/payments | body_size: 4582 bytes",
+    "metadata": {
+      "root_cause": "API gateway 502 timeout because payment-processor-v2 was slow due to Redis pool exhaustion",
+      "fix_applied": "Increased gateway upstream timeout from 10s to 30s, added circuit breaker for payment service with 50% traffic shedding on high latency",
+      "service": "api-gateway",
+      "resolved": true,
+      "resolution_time_minutes": 18,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-22T11:23:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:00.093984+00:00"
+  },
+  {
+    "content": "2025-06-25T08:15:44.789Z ERROR [fraud-detection-ml] ML model inference timeout: model_version=3.2.1, input_batch_size=64, timeout_ms=5000, actual_latency_ms=8743. GPU utilization: 97%, VRAM: 14.8GB/16GB. Model: paystream_fraud_v3.onnx. Request dropped: transaction_tx_9f2a871.",
+    "metadata": {
+      "root_cause": "ML model inference timeout due to GPU memory pressure and batch size too large",
+      "fix_applied": "Reduced inference batch size from 64 to 32, added GPU memory monitoring alert at 85%, implemented request queuing with priority levels",
+      "service": "fraud-detection-ml",
+      "resolved": true,
+      "resolution_time_minutes": 25,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-25T08:40:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:00.414218+00:00"
+  },
+  {
+    "content": "2025-06-28T19:44:33.123Z FATAL [k8s-worker-node-05] OOMKilled | Pod: notification-worker-7f8b9c2d-3k9m1 | Namespace: paystream-prod | Container: notification-worker | Memory limit: 512Mi | Requested: 256Mi | Peak usage before kill: 498Mi | Exit code: 137 | Restarts: 3 in last 24h",
+    "metadata": {
+      "root_cause": "Kubernetes OOMKilled notification worker due to memory leak in email template rendering",
+      "fix_applied": "Increased memory limit from 512Mi to 1Gi, fixed HTML email template memory leak (unclosed file handles in template loader), added memory usage metrics",
+      "service": "notification-worker",
+      "resolved": true,
+      "resolution_time_minutes": 35,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-28T20:19:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:00.732621+00:00"
+  },
+  {
+    "content": "2025-07-01T10:30:22.456Z ERROR [api-gateway] SSL certificate verification failed: certificate_expired | host: api.paystream.io | cert_fingerprint: SHA256:ABC123DEF456 | issuer: Let's Encrypt Authority X3 | expiry: 2025-06-30T23:59:59Z | chain: [R3, ISRG Root X1] | sni: api.paystream.io",
+    "metadata": {
+      "root_cause": "SSL certificate for api.paystream.io expired, causing all HTTPS traffic to fail",
+      "fix_applied": "Renewed SSL certificate via certbot, updated automated renewal cron job, added certificate expiry monitoring with 14-day alert",
+      "service": "api-gateway",
+      "resolved": true,
+      "resolution_time_minutes": 10,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-07-01T10:40:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:01.052411+00:00"
+  },
+  {
+    "content": "2025-07-03T16:55:11.789Z WARN [postgres-primary] Disk space critical: mount=/data/postgres, usage=97.2%, total=500GB, used=485GB, free=15GB. Autovacuum running on transactions_2025_06 (estimated WAL growth: 2GB/hr). Projects to hit 100% in ~7.5 hours.",
+    "metadata": {
+      "root_cause": "Disk space at 97% on postgres-primary due to WAL file accumulation and large transaction table bloat",
+      "fix_applied": "Ran VACUUM FULL on old partition tables, increased disk by 200GB via cloud provider, configured WAL archiving cleanup retention to 48h, added 85% disk alert",
+      "service": "postgres-primary",
+      "resolved": true,
+      "resolution_time_minutes": 30,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-07-03T17:25:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:01.376065+00:00"
+  },
+  {
+    "content": "2025-07-05T07:22:44.123Z ERROR [notification-worker] Message queue consumer lag critical: queue=paystream.email.notifications, group=email-workers, lag=45831 messages, oldest_message_age=14.3 minutes, consumer_count=3, partition_count=6, broker=kafka-02:9092, throughput=320 msg/s, required=1200 msg/s",
+    "metadata": {
+      "root_cause": "Kafka consumer lag due to insufficient consumer instances during marketing email campaign",
+      "fix_applied": "Scaled notification worker from 3 to 8 replicas, increased consumer count to match partition count, added consumer lag auto-scaling HPA",
+      "service": "notification-worker",
+      "resolved": true,
+      "resolution_time_minutes": 12,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-07-05T07:34:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:01.682621+00:00"
+  },
+  {
+    "content": "ERROR [payment-processor-v2] Could not acquire connection from Redis pool: pool_name=payment-locks, max_wait=2000ms, active_connections=15, idle=0, pending_acquires=8. Redis endpoint: redis-cluster.internal:6379. Thread: pool-8-thread-3",
+    "metadata": {
+      "root_cause": "The Redis connection pool for the payment service has been exhausted due to a high number of pending acquires and active connections.",
+      "fix_applied": "Increased pool size to 25, added retry with backoff for lock acquisition, implemented connection pool health check",
+      "service": "payment",
+      "resolved": true,
+      "resolution_time_minutes": 8,
+      "model_used": "llama-3.1-8b-instant",
+      "cost_usd": 3.6e-05,
+      "timestamp": "2026-05-19T15:08:04.116511+00:00"
+    },
+    "stored_at": "2026-05-19T15:08:06.813324+00:00"
+  },
+  {
+    "content": "ERROR [payment-processor-v2] Redis pool timeout: Cannot acquire connection, pool exhausted. Pool: payment-locks (max=15, active=15). Stack trace: redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool at redis.clients.jedis.util.Pool.getResource(Pool.java:50",
+    "metadata": {
+      "root_cause": "The Redis connection pool for the payment service has been exhausted due to a high volume of concurrent lock acquisitions.",
+      "fix_applied": "Applied learned fix: pool_size=25, exponential backoff retry, connection leak detection",
+      "service": "payment",
+      "resolved": true,
+      "resolution_time_minutes": 5,
+      "model_used": "llama-3.1-8b-instant",
+      "cost_usd": 3.6e-05,
+      "timestamp": "2026-05-19T15:08:15.835341+00:00"
+    },
+    "stored_at": "2026-05-19T15:08:16.258149+00:00"
+  },
+  {
+    "content": "2025-06-15T14:23:11.456Z ERROR [payment-processor-v2] Redis connection pool exhausted: pool_size=10, active=10, waiting=12, timeout=2000ms. Stack: com.paystream.redis.RedisPoolManager.acquire(Main.java:134) ~[pool-4-thread-1] at com.paystream.payment.TransactionHandler.processPayment(TransactionHandler.java:89)",
+    "metadata": {
+      "root_cause": "Redis connection pool exhausted due to payment spike",
+      "fix_applied": "Increased CONNECTION_POOL_SIZE from 10 to 25, added connection timeout retry logic",
+      "service": "payment-processor-v2",
+      "resolved": true,
+      "resolution_time_minutes": 8,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-15T14:31:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:28.199189+00:00"
+  },
+  {
+    "content": "2025-06-16T09:45:33.789Z FATAL [postgres-primary] FATAL: remaining connection slots are reserved for non-replication superuser connections. PID: 28473, Query: SELECT * FROM transactions WHERE user_id = ? AND status = 'pending' LIMIT 100. Connection count: 197/200.",
+    "metadata": {
+      "root_cause": "PostgreSQL max connections reached due to unclosed connection pools from API servers",
+      "fix_applied": "Reduced pg_bouncer max_connections from 200 to 300, fixed connection leak in api-gateway pool release logic",
+      "service": "postgres-primary",
+      "resolved": true,
+      "resolution_time_minutes": 22,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-16T10:07:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:28.573123+00:00"
+  },
+  {
+    "content": "2025-06-18T22:11:45.123Z WARN [redis-cache-03] OOM command not allowed when used memory > 'maxmemory'. Used: 512MB/512MB. Keys evicted: 1432 in last 60s. LRU eviction rate critical. Top keys by memory: session:* (45%), payment:lock:* (30%), cache:* (25%).",
+    "metadata": {
+      "root_cause": "Redis maxmemory limit reached causing mass eviction of session data",
+      "fix_applied": "Increased maxmemory to 1GB, added TTL enforcement on session keys, implemented key expiration policy for payment locks",
+      "service": "redis-cache-03",
+      "resolved": true,
+      "resolution_time_minutes": 15,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-18T22:26:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:28.892941+00:00"
+  },
+  {
+    "content": "2025-06-20T03:33:22.001Z ERROR [auth-service] JWT token validation failed: token_expired. Token: eyJhbGciOiJSUzI1NiIsImtpZCI6InByb2QtdjIifQ. User: user_8a3f2c, Client IP: 203.0.113.42, User-Agent: PayStreamApp/3.2.1 (iOS 18.1). Expired at: 2025-06-20T03:28:00Z, Now: 2025-06-20T03:33:22Z.",
+    "metadata": {
+      "root_cause": "JWT token expiry not handled gracefully by auth-service token refresh logic",
+      "fix_applied": "Updated token refresh endpoint to return 401 with retry_after header, added auto-refresh on client side for tokens expiring within 5 minutes",
+      "service": "auth-service",
+      "resolved": true,
+      "resolution_time_minutes": 12,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-20T03:45:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:29.212357+00:00"
+  },
+  {
+    "content": "2025-06-22T11:05:17.456Z CRIT [api-gateway] 502 Bad Gateway | upstream_response_time: 30002ms | upstream: \"https://payment-processor-v2.internal:8080/api/v2/process\" | request_id: req_b7e91a3f | client_ip: 198.51.100.23 | method: POST | path: /api/v2/payments | body_size: 4582 bytes",
+    "metadata": {
+      "root_cause": "API gateway 502 timeout because payment-processor-v2 was slow due to Redis pool exhaustion",
+      "fix_applied": "Increased gateway upstream timeout from 10s to 30s, added circuit breaker for payment service with 50% traffic shedding on high latency",
+      "service": "api-gateway",
+      "resolved": true,
+      "resolution_time_minutes": 18,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-22T11:23:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:29.521240+00:00"
+  },
+  {
+    "content": "2025-06-25T08:15:44.789Z ERROR [fraud-detection-ml] ML model inference timeout: model_version=3.2.1, input_batch_size=64, timeout_ms=5000, actual_latency_ms=8743. GPU utilization: 97%, VRAM: 14.8GB/16GB. Model: paystream_fraud_v3.onnx. Request dropped: transaction_tx_9f2a871.",
+    "metadata": {
+      "root_cause": "ML model inference timeout due to GPU memory pressure and batch size too large",
+      "fix_applied": "Reduced inference batch size from 64 to 32, added GPU memory monitoring alert at 85%, implemented request queuing with priority levels",
+      "service": "fraud-detection-ml",
+      "resolved": true,
+      "resolution_time_minutes": 25,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-25T08:40:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:29.796277+00:00"
+  },
+  {
+    "content": "2025-06-28T19:44:33.123Z FATAL [k8s-worker-node-05] OOMKilled | Pod: notification-worker-7f8b9c2d-3k9m1 | Namespace: paystream-prod | Container: notification-worker | Memory limit: 512Mi | Requested: 256Mi | Peak usage before kill: 498Mi | Exit code: 137 | Restarts: 3 in last 24h",
+    "metadata": {
+      "root_cause": "Kubernetes OOMKilled notification worker due to memory leak in email template rendering",
+      "fix_applied": "Increased memory limit from 512Mi to 1Gi, fixed HTML email template memory leak (unclosed file handles in template loader), added memory usage metrics",
+      "service": "notification-worker",
+      "resolved": true,
+      "resolution_time_minutes": 35,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-06-28T20:19:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:30.143319+00:00"
+  },
+  {
+    "content": "2025-07-01T10:30:22.456Z ERROR [api-gateway] SSL certificate verification failed: certificate_expired | host: api.paystream.io | cert_fingerprint: SHA256:ABC123DEF456 | issuer: Let's Encrypt Authority X3 | expiry: 2025-06-30T23:59:59Z | chain: [R3, ISRG Root X1] | sni: api.paystream.io",
+    "metadata": {
+      "root_cause": "SSL certificate for api.paystream.io expired, causing all HTTPS traffic to fail",
+      "fix_applied": "Renewed SSL certificate via certbot, updated automated renewal cron job, added certificate expiry monitoring with 14-day alert",
+      "service": "api-gateway",
+      "resolved": true,
+      "resolution_time_minutes": 10,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-07-01T10:40:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:30.462564+00:00"
+  },
+  {
+    "content": "2025-07-03T16:55:11.789Z WARN [postgres-primary] Disk space critical: mount=/data/postgres, usage=97.2%, total=500GB, used=485GB, free=15GB. Autovacuum running on transactions_2025_06 (estimated WAL growth: 2GB/hr). Projects to hit 100% in ~7.5 hours.",
+    "metadata": {
+      "root_cause": "Disk space at 97% on postgres-primary due to WAL file accumulation and large transaction table bloat",
+      "fix_applied": "Ran VACUUM FULL on old partition tables, increased disk by 200GB via cloud provider, configured WAL archiving cleanup retention to 48h, added 85% disk alert",
+      "service": "postgres-primary",
+      "resolved": true,
+      "resolution_time_minutes": 30,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-07-03T17:25:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:30.816561+00:00"
+  },
+  {
+    "content": "2025-07-05T07:22:44.123Z ERROR [notification-worker] Message queue consumer lag critical: queue=paystream.email.notifications, group=email-workers, lag=45831 messages, oldest_message_age=14.3 minutes, consumer_count=3, partition_count=6, broker=kafka-02:9092, throughput=320 msg/s, required=1200 msg/s",
+    "metadata": {
+      "root_cause": "Kafka consumer lag due to insufficient consumer instances during marketing email campaign",
+      "fix_applied": "Scaled notification worker from 3 to 8 replicas, increased consumer count to match partition count, added consumer lag auto-scaling HPA",
+      "service": "notification-worker",
+      "resolved": true,
+      "resolution_time_minutes": 12,
+      "model_used": "preloaded",
+      "cost_usd": 0.0,
+      "timestamp": "2025-07-05T07:34:00Z"
+    },
+    "stored_at": "2026-05-19T15:08:31.133102+00:00"
+  },
+  {
+    "content": "ERROR [payment-processor-v2] Could not acquire connection from Redis pool: pool_name=payment-locks, max_wait=2000ms, active_connections=15, idle=0, pending_acquires=8. Redis endpoint: redis-cluster.internal:6379. Thread: pool-8-thread-3",
+    "metadata": {
+      "root_cause": "The Redis connection pool for the payment service has been exhausted due to a high number of pending acquires, indicating a potential connection leak or a sudden spike in payment requests.",
+      "fix_applied": "Increased pool size to 25, added retry with backoff for lock acquisition, implemented connection pool health check",
+      "service": "payment",
+      "resolved": true,
+      "resolution_time_minutes": 8,
+      "model_used": "llama-3.1-8b-instant",
+      "cost_usd": 3.7e-05,
+      "timestamp": "2026-05-19T15:08:33.196197+00:00"
+    },
+    "stored_at": "2026-05-19T15:08:33.536704+00:00"
+  },
+  {
+    "content": "ERROR [payment-processor-v2] Redis pool timeout: Cannot acquire connection, pool exhausted. Pool: payment-locks (max=15, active=15). Stack trace: redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool at redis.clients.jedis.util.Pool.getResource(Pool.java:50",
+    "metadata": {
+      "root_cause": "The Redis connection pool for the payment service has been exhausted due to a lack of available connections.",
+      "fix_applied": "Applied learned fix: pool_size=25, exponential backoff retry, connection leak detection",
+      "service": "payment",
+      "resolved": true,
+      "resolution_time_minutes": 5,
+      "model_used": "llama-3.1-8b-instant",
+      "cost_usd": 3.7e-05,
+      "timestamp": "2026-05-19T15:08:45.347207+00:00"
+    },
+    "stored_at": "2026-05-19T15:08:45.615651+00:00"
+  },
+  {
+    "content": "CRIT [dns-resolver] DNS resolution failure for internal service: payment-processor-v2.internal.paystream.svc.cluster.local. Resolver: 10.100.0.10:53 (kube-dns). NXDOMAIN response. Cached TTL expired. Affected services: api-gateway, notification-worker. Error: Temporary failure in name resolution",
+    "metadata": {
+      "root_cause": "The DNS resolver (kube-dns) failed to resolve the internal service name due to an expired cache entry and absence of a valid A record for `payment-processor-v2.internal.paystream.svc.cluster.local`.",
+      "fix_applied": "Increased CoreDNS replica count from 2 to 3 with pod anti-affinity, enabled negative DNS caching with TTL of 30s, added DNS health check prober",
+      "service": "payment",
+      "resolved": true,
+      "resolution_time_minutes": 20,
+      "model_used": "qwen/qwen3-32b",
+      "cost_usd": 7.2e-05,
+      "timestamp": "2026-05-19T15:08:58.398587+00:00"
+    },
+    "stored_at": "2026-05-19T15:08:58.680484+00:00"
+  },
+  {
+    "content": "Test connectivity to Hindsight API",
+    "metadata": {
+      "root_cause": "connectivity_test",
+      "service": "test",
+      "resolved": true
+    },
+    "stored_at": "2026-05-19T16:34:14.635471+00:00"
   }
 ]

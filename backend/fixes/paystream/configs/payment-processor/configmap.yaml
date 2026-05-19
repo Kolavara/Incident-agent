@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-processor-config
+  namespace: paystream-prod
+data:
+  CONNECTION_POOL_SIZE: "25"
+  POOL_TIMEOUT_MS: "2000"
+  MAX_RETRIES: "5"
+  RETRY_BACKOFF_MS: "1000"
+  REDIS_ENDPOINT: "redis-cluster.internal:6379"
+  TRANSACTION_TIMEOUT_MS: "5000"
+  ENABLE_CIRCUIT_BREAKER: "true"
+  CIRCUIT_BREAKER_THRESHOLD: "5"

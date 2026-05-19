@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-processor-v2
+  namespace: paystream-prod
+  labels:
+    app: payment-processor
+    version: v2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: payment-processor
+  template:
+    metadata:
+      labels:
+        app: payment-processor
+    spec:
+      containers:
+        - name: payment-processor
+          image: paystream/payment-processor:v2.4.1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CONNECTION_POOL_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-processor-config
+                  key: CONNECTION_POOL_SIZE
+            - name: POOL_TIMEOUT_MS
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-processor-config
+                  key: POOL_TIMEOUT_MS
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10

@@ -222,3 +222,921 @@
 {"timestamp": "2026-05-18 22:40:46", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=llama-3.1-8b-instant, input_tokens=339, output_tokens=159, cost=$0.000030, latency=1.61s"}
 {"timestamp": "2026-05-18 22:40:46", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000030 / $1.00"}
 {"timestamp": "2026-05-18 22:40:46", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[4fd3c29b] Diagnosis complete. Type=PARTIAL, Model=llama-3.1-8b-instant, Cost=$0.000030, Latency=3.64s"}
+{"timestamp": "2026-05-19 19:31:52", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:32:54", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "  Generated: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "  Generated: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "  Generated: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "  Generated: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 4 test files"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 5/5 tests passed"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Initialized git repo at C:\Users\COSMOS\OneDrive\Desktop\incident-agent\fixes\paystream"}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'."}
+{"timestamp": "2026-05-19 19:33:47", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 19:33:48", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 19:33:52", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 19:33:52", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=2155, output_tokens=559, cost=$0.000152, latency=1.69s"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 3 fix tasks (0 rule-based, 3 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod... (script_run)"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Script to execute: kubectl delete pod redis-cache-03 -n <namespace>"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-02] Applying: Added readiness probe with Redis PING command... (config_edit)"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.fixer", "level": "WARNING", "message": "[INC-014-task-02] No template or content for config edit: k8s/redis-cache/deployment.yaml"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-03] Applying: Configured cluster auto-failover with sentinel... (config_edit)"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 2 applied, 1 failed"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 5/5 tests passed"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Committed changes to branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'."}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (config_edit)"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\payment-processor\configmap.yaml"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:33:54", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 5/5 tests passed"}
+{"timestamp": "2026-05-19 19:33:55", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:33:55", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'."}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 5/5 tests passed"}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'."}
+{"timestamp": "2026-05-19 19:36:44", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 19:36:45", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 19:36:49", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 19:36:49", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=2424, output_tokens=1281, cost=$0.000224, latency=3.05s"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\payment-processor\configmap.yaml"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 5/5 tests passed"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'."}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (config_edit)"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\payment-processor\configmap.yaml"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 5/5 tests passed"}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:36:53", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'."}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "  Generated: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "  Generated: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "  Generated: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 3 test files"}
+{"timestamp": "2026-05-19 19:43:34", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 19:43:35", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Committed changes to branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'"}
+{"timestamp": "2026-05-19 19:43:35", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'."}
+{"timestamp": "2026-05-19 19:43:35", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 19:43:36", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 19:43:40", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 19:43:40", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3228, output_tokens=1101, cost=$0.000249, latency=2.97s"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\payment-processor\configmap.yaml"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'."}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (config_edit)"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\payment-processor\configmap.yaml"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:43:43", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'."}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 19:44:24", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:44:25", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'."}
+{"timestamp": "2026-05-19 19:44:25", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 19:44:26", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 19:44:30", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 19:44:30", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3228, output_tokens=898, cost=$0.000233, latency=8.57s"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\payment-processor\configmap.yaml"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 19:44:38", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'."}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (config_edit)"}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\payment-processor\configmap.yaml"}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 19:44:39", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'."}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'."}
+{"timestamp": "2026-05-19 20:15:28", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 20:15:29", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 20:15:34", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 20:15:34", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3228, output_tokens=704, cost=$0.000218, latency=1.78s"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'."}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:15:36", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:15:37", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Committed changes to branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'"}
+{"timestamp": "2026-05-19 20:15:37", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'."}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'."}
+{"timestamp": "2026-05-19 20:33:59", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 20:34:00", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 20:34:05", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 20:34:05", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3496, output_tokens=586, cost=$0.000222, latency=1.73s"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:34:06", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'."}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:34:07", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'."}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'."}
+{"timestamp": "2026-05-19 20:34:22", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 20:34:23", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 20:34:27", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 20:34:27", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3496, output_tokens=582, cost=$0.000221, latency=1.52s"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'."}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:34:29", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'."}
+{"timestamp": "2026-05-19 20:37:52", "name": "incident_agent.vector_store", "level": "INFO", "message": "Hindsight Memory initialized: bank=incident-memory-bank"}
+{"timestamp": "2026-05-19 20:37:53", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 20:37:57", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 20:37:58", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:03 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:37:59", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:03 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:37:59", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:03 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:37:59", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:04 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:00", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:04 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:00", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:04 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:00", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:05 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:01", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:05 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:01", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:05 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:01", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:06 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:02", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[f9379c10] Starting diagnosis pipeline..."}
+{"timestamp": "2026-05-19 20:38:02", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[f9379c10] Searching memory for similar incidents..."}
+{"timestamp": "2026-05-19 20:38:03", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight recall failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:07 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:03", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[f9379c10] Incident classified as: PARTIAL (score=0.7368)"}
+{"timestamp": "2026-05-19 20:38:03", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[f9379c10] Routing: Partial match (score=0.74) — using cheap model | Model tier: cheap | Model: llama-3.1-8b-instant"}
+{"timestamp": "2026-05-19 20:38:03", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[f9379c10] Using simple reasoning chain..."}
+{"timestamp": "2026-05-19 20:38:03", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:38:04", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=llama-3.1-8b-instant, input_tokens=432, output_tokens=182, cost=$0.000036, latency=0.94s"}
+{"timestamp": "2026-05-19 20:38:04", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000036 / $1.00"}
+{"timestamp": "2026-05-19 20:38:04", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[f9379c10] Diagnosis complete. Type=PARTIAL, Model=llama-3.1-8b-instant, Cost=$0.000036, Latency=1.41s"}
+{"timestamp": "2026-05-19 20:38:06", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:11 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:06", "name": "incident_agent.indexer", "level": "INFO", "message": "Stored resolved incident: The Redis connection pool for the payment service has been exhausted due to a high number of pending acquires and active connections. | service=payment | time=8min | cost=$0.000036"}
+{"timestamp": "2026-05-19 20:38:06", "name": "incident_agent.inference_engine", "level": "INFO", "message": "Incident f9379c10 marked as resolved."}
+{"timestamp": "2026-05-19 20:38:07", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[5094e2d7] Starting diagnosis pipeline..."}
+{"timestamp": "2026-05-19 20:38:07", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[5094e2d7] Searching memory for similar incidents..."}
+{"timestamp": "2026-05-19 20:38:08", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight recall failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:12 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:08", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[5094e2d7] Incident classified as: KNOWN (score=1.0000)"}
+{"timestamp": "2026-05-19 20:38:08", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[5094e2d7] Routing: Known incident (score=1.00) — using cheap model | Model tier: cheap | Model: llama-3.1-8b-instant"}
+{"timestamp": "2026-05-19 20:38:08", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[5094e2d7] Using simple reasoning chain..."}
+{"timestamp": "2026-05-19 20:38:08", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:38:08", "name": "incident_agent.groq_client", "level": "INFO", "message": "Rate limiting: waiting 6.9s before next request..."}
+{"timestamp": "2026-05-19 20:38:15", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=llama-3.1-8b-instant, input_tokens=465, output_tokens=154, cost=$0.000036, latency=7.55s"}
+{"timestamp": "2026-05-19 20:38:15", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000072 / $1.00"}
+{"timestamp": "2026-05-19 20:38:15", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[5094e2d7] Diagnosis complete. Type=KNOWN, Model=llama-3.1-8b-instant, Cost=$0.000036, Latency=8.00s"}
+{"timestamp": "2026-05-19 20:38:16", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:20 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:16", "name": "incident_agent.indexer", "level": "INFO", "message": "Stored resolved incident: The Redis connection pool for the payment service has been exhausted due to a high volume of concurrent lock acquisitions. | service=payment | time=5min | cost=$0.000036"}
+{"timestamp": "2026-05-19 20:38:16", "name": "incident_agent.inference_engine", "level": "INFO", "message": "Incident 5094e2d7 marked as resolved."}
+{"timestamp": "2026-05-19 20:38:17", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[4425607b] Starting diagnosis pipeline..."}
+{"timestamp": "2026-05-19 20:38:17", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[4425607b] Searching memory for similar incidents..."}
+{"timestamp": "2026-05-19 20:38:17", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight recall failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:21 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:17", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[4425607b] Incident classified as: NOVEL (score=0.2963)"}
+{"timestamp": "2026-05-19 20:38:17", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[4425607b] Routing: Novel incident (score=0.30) — using powerful model | Model tier: powerful | Model: qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 20:38:17", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[4425607b] Using complex reasoning chain for novel incident..."}
+{"timestamp": "2026-05-19 20:38:17", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:38:17", "name": "incident_agent.groq_client", "level": "INFO", "message": "Rate limiting: waiting 9.6s before next request..."}
+{"timestamp": "2026-05-19 20:38:22", "name": "incident_agent.vector_store", "level": "INFO", "message": "Hindsight Memory initialized: bank=incident-memory-bank"}
+{"timestamp": "2026-05-19 20:38:23", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 20:38:27", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 20:38:28", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:32 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:28", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:32 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:28", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:33 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:33 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=400, output_tokens=774, cost=$0.000082, latency=11.79s"}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000154 / $1.00"}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[4425607b] Diagnosis complete. Type=NOVEL, Model=qwen/qwen3-32b, Cost=$0.000082, Latency=12.10s"}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:33 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:34 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.indexer", "level": "INFO", "message": "Stored resolved incident: The DNS resolver (kube-dns) failed to resolve the internal service `payment-processor-v2.internal.paystream.svc.cluster.local` due to an expired TTL cache entry and an underlying NXDOMAIN response, likely caused by a misconfigured or missing DNS record for the service. | service=payment | time=20min | cost=$0.000082"}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.inference_engine", "level": "INFO", "message": "Incident 4425607b marked as resolved."}
+{"timestamp": "2026-05-19 20:38:29", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:34 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:30", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:34 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:30", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:34 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:30", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:35 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:31", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:35 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:32", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[0254743c] Starting diagnosis pipeline..."}
+{"timestamp": "2026-05-19 20:38:32", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[0254743c] Searching memory for similar incidents..."}
+{"timestamp": "2026-05-19 20:38:32", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight recall failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:36 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:32", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[0254743c] Incident classified as: KNOWN (score=1.0000)"}
+{"timestamp": "2026-05-19 20:38:32", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[0254743c] Routing: Known incident (score=1.00) — using cheap model | Model tier: cheap | Model: llama-3.1-8b-instant"}
+{"timestamp": "2026-05-19 20:38:32", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[0254743c] Using simple reasoning chain..."}
+{"timestamp": "2026-05-19 20:38:32", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:38:33", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=llama-3.1-8b-instant, input_tokens=449, output_tokens=178, cost=$0.000037, latency=0.69s"}
+{"timestamp": "2026-05-19 20:38:33", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000037 / $1.00"}
+{"timestamp": "2026-05-19 20:38:33", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[0254743c] Diagnosis complete. Type=KNOWN, Model=llama-3.1-8b-instant, Cost=$0.000037, Latency=1.04s"}
+{"timestamp": "2026-05-19 20:38:33", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:37 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:33", "name": "incident_agent.indexer", "level": "INFO", "message": "Stored resolved incident: The Redis connection pool for the payment service has been exhausted due to a high number of pending acquires, indicating a potential connection leak or a sudden spike in payment requests. | service=payment | time=8min | cost=$0.000037"}
+{"timestamp": "2026-05-19 20:38:33", "name": "incident_agent.inference_engine", "level": "INFO", "message": "Incident 0254743c marked as resolved."}
+{"timestamp": "2026-05-19 20:38:34", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[9ea4a1df] Starting diagnosis pipeline..."}
+{"timestamp": "2026-05-19 20:38:34", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[9ea4a1df] Searching memory for similar incidents..."}
+{"timestamp": "2026-05-19 20:38:34", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight recall failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:39 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:34", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[9ea4a1df] Incident classified as: KNOWN (score=1.0000)"}
+{"timestamp": "2026-05-19 20:38:34", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[9ea4a1df] Routing: Known incident (score=1.00) — using cheap model | Model tier: cheap | Model: llama-3.1-8b-instant"}
+{"timestamp": "2026-05-19 20:38:34", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[9ea4a1df] Using simple reasoning chain..."}
+{"timestamp": "2026-05-19 20:38:34", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:38:34", "name": "incident_agent.groq_client", "level": "INFO", "message": "Rate limiting: waiting 9.6s before next request..."}
+{"timestamp": "2026-05-19 20:38:45", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=llama-3.1-8b-instant, input_tokens=468, output_tokens=175, cost=$0.000037, latency=10.48s"}
+{"timestamp": "2026-05-19 20:38:45", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000074 / $1.00"}
+{"timestamp": "2026-05-19 20:38:45", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[9ea4a1df] Diagnosis complete. Type=KNOWN, Model=llama-3.1-8b-instant, Cost=$0.000037, Latency=10.79s"}
+{"timestamp": "2026-05-19 20:38:45", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:49 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:45", "name": "incident_agent.indexer", "level": "INFO", "message": "Stored resolved incident: The Redis connection pool for the payment service has been exhausted due to a lack of available connections. | service=payment | time=5min | cost=$0.000037"}
+{"timestamp": "2026-05-19 20:38:45", "name": "incident_agent.inference_engine", "level": "INFO", "message": "Incident 9ea4a1df marked as resolved."}
+{"timestamp": "2026-05-19 20:38:46", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[86a0a83d] Starting diagnosis pipeline..."}
+{"timestamp": "2026-05-19 20:38:46", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[86a0a83d] Searching memory for similar incidents..."}
+{"timestamp": "2026-05-19 20:38:46", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight recall failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:08:51 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:46", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[86a0a83d] Incident classified as: NOVEL (score=0.2963)"}
+{"timestamp": "2026-05-19 20:38:46", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[86a0a83d] Routing: Novel incident (score=0.30) — using powerful model | Model tier: powerful | Model: qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 20:38:46", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[86a0a83d] Using complex reasoning chain for novel incident..."}
+{"timestamp": "2026-05-19 20:38:46", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:38:46", "name": "incident_agent.groq_client", "level": "INFO", "message": "Rate limiting: waiting 9.6s before next request..."}
+{"timestamp": "2026-05-19 20:38:58", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=400, output_tokens=654, cost=$0.000072, latency=11.45s"}
+{"timestamp": "2026-05-19 20:38:58", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000146 / $1.00"}
+{"timestamp": "2026-05-19 20:38:58", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[86a0a83d] Diagnosis complete. Type=NOVEL, Model=qwen/qwen3-32b, Cost=$0.000072, Latency=11.76s"}
+{"timestamp": "2026-05-19 20:38:58", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight retain failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 15:09:03 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'x-ignored-params': 'async', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 20:38:58", "name": "incident_agent.indexer", "level": "INFO", "message": "Stored resolved incident: The DNS resolver (kube-dns) failed to resolve the internal service name due to an expired cache entry and absence of a valid A record for `payment-processor-v2.internal.paystream.svc.cluster.local`. | service=payment | time=20min | cost=$0.000072"}
+{"timestamp": "2026-05-19 20:38:58", "name": "incident_agent.inference_engine", "level": "INFO", "message": "Incident 86a0a83d marked as resolved."}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'."}
+{"timestamp": "2026-05-19 20:41:27", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 20:41:28", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 20:41:32", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 20:41:32", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3496, output_tokens=602, cost=$0.000223, latency=1.67s"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube'."}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 20:41:34", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No git remote configured. Changes committed locally on branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-'."}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:31:25", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:31:26", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot get main branch ref: 404 {"message":"Not Found","documentation_url":"https://docs.github.com/rest/git/refs#get-a-reference","status":"404"}"}
+{"timestamp": "2026-05-19 21:31:26", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 21:31:27", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 21:31:31", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 21:31:31", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3496, output_tokens=536, cost=$0.000218, latency=1.60s"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot get main branch ref: 404 {"message":"Not Found","documentation_url":"https://docs.github.com/rest/git/refs#get-a-reference","status":"404"}"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:31:33", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:31:34", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot get main branch ref: 404 {"message":"Not Found","documentation_url":"https://docs.github.com/rest/git/refs#get-a-reference","status":"404"}"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:35:16", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:35:18", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:35:18", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 21:35:19", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 21:35:24", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 21:35:24", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3700, output_tokens=627, cost=$0.000235, latency=1.73s"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 3 fix tasks (0 rule-based, 3 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod... (script_run)"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Script to execute: kubectl rollout restart deployment/redis-cache-03 -n <namespace>"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-02] Applying: Added readiness probe with Redis PING command... (k8s_manifest)"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.fixer", "level": "WARNING", "message": "[INC-014-task-02] No template/content for k8s manifest: k8s/redis-cache/deployment.yaml"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-03] Applying: Configured cluster auto-failover with sentinel... (config_edit)"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 2 applied, 1 failed"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:35:26", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:35:27", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:35:28", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:36:16", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:36:18", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:36:18", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "API push failed — falling back to git remote push"}
+{"timestamp": "2026-05-19 21:36:20", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Pushed branch 'fix/INC-013-dns-resolution-failure-for-internal-kube' to origin"}
+{"timestamp": "2026-05-19 21:36:20", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Branch pushed via git: https://github.com/Kolavara/paystream-infra/pull/new/fix/INC-013-dns-resolution-failure-for-internal-kube"}
+{"timestamp": "2026-05-19 21:36:20", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 21:36:21", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 21:36:25", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 21:36:25", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3700, output_tokens=677, cost=$0.000239, latency=1.98s"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:36:27", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:36:28", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:36:29", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "API push failed — falling back to git remote push"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Pushed branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube' to origin"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Branch pushed via git: https://github.com/Kolavara/paystream-infra/pull/new/fix/INC-014-redis-cache-node-unreachable-due-to-kube"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:36:31", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:36:32", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:36:33", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "API push failed — falling back to git remote push"}
+{"timestamp": "2026-05-19 21:36:34", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Pushed branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-' to origin"}
+{"timestamp": "2026-05-19 21:36:34", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Branch pushed via git: https://github.com/Kolavara/paystream-infra/pull/new/fix/INC-015-rate-limit-exceeded-on-token-generation-"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "GitHub CLI detected: C:\Program Files\GitHub CLI\gh.exe"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:52:04", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:52:08", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "gh CLI failed: pull request create failed: GraphQL: Resource not accessible by personal access token (createPullRequest)"}
+{"timestamp": "2026-05-19 21:52:09", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:52:09", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Previous methods unavailable or failed — falling back to git push"}
+{"timestamp": "2026-05-19 21:52:11", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Pushed branch 'fix/INC-013-dns-resolution-failure-for-internal-kube' to origin"}
+{"timestamp": "2026-05-19 21:52:11", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Branch pushed via git: https://github.com/Kolavara/paystream-infra/pull/new/fix/INC-013-dns-resolution-failure-for-internal-kube"}
+{"timestamp": "2026-05-19 21:52:11", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 21:52:12", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 21:52:16", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 21:52:16", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3700, output_tokens=602, cost=$0.000233, latency=1.82s"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:52:18", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:52:22", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "gh CLI failed: pull request create failed: GraphQL: Resource not accessible by personal access token (createPullRequest)"}
+{"timestamp": "2026-05-19 21:52:24", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:52:24", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Previous methods unavailable or failed — falling back to git push"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Pushed branch 'fix/INC-014-redis-cache-node-unreachable-due-to-kube' to origin"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Branch pushed via git: https://github.com/Kolavara/paystream-infra/pull/new/fix/INC-014-redis-cache-node-unreachable-due-to-kube"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 21:52:26", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 21:52:29", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "gh CLI failed: pull request create failed: GraphQL: Resource not accessible by personal access token (createPullRequest)"}
+{"timestamp": "2026-05-19 21:52:31", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Cannot create branch: 403 {"message":"Resource not accessible by personal access token","documentation_url":"https://docs.github.com/rest/git/refs#create-a-reference","status":"403"}"}
+{"timestamp": "2026-05-19 21:52:31", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Previous methods unavailable or failed — falling back to git push"}
+{"timestamp": "2026-05-19 21:52:33", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Pushed branch 'fix/INC-015-rate-limit-exceeded-on-token-generation-' to origin"}
+{"timestamp": "2026-05-19 21:52:33", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "Branch pushed via git: https://github.com/Kolavara/paystream-infra/pull/new/fix/INC-015-rate-limit-exceeded-on-token-generation-"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "GitHub CLI detected: C:\Program Files\GitHub CLI\gh.exe"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-013] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Applying: Increased CoreDNS replica count from 2 to 3 with pod anti-af... (script_run)"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-013-task-01] Script to execute: kubectl scale deployment/coredns -n kube-system --replicas=3"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_postgres_pool.py"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_notification_worker.py"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_api_gateway.py"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_data_validator.py"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_db_migration.py"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-013] Generated 0 test files"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 22:00:06", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 22:00:09", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "PR already exists for branch 'fix/INC-013-dns-resolution-failure-for-internal-kube'"}
+{"timestamp": "2026-05-19 22:00:09", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] 0/1 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 22:00:10", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 22:00:15", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 22:00:15", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3700, output_tokens=1000, cost=$0.000265, latency=2.92s"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-014] Generated 1 fix tasks (0 rule-based, 1 LLM/fallback)"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-014-task-01] Applying: Restarted redis-cache-03 pod, added readiness probe with Red... (config_edit)"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\configs\redis\redis-config.conf"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_config.py"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-014] Generated 0 test files"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 22:00:18", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "PR created via gh CLI: #2 at https://github.com/Kolavara/paystream-infra/pull/2"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[INC-015] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[INC-015-task-01] Applying: Blocked offending IP at WAF level, added exponential backoff... (k8s_manifest)"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[INC-015] Generated 0 test files"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 22:00:23", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 22:00:29", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "PR created via gh CLI: #3 at https://github.com/Kolavara/paystream-infra/pull/3"}
+{"timestamp": "2026-05-19 22:08:29", "name": "incident_agent.vector_store", "level": "INFO", "message": "Hindsight Memory initialized: bank=incident-memory-bank"}
+{"timestamp": "2026-05-19 22:08:30", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 22:08:34", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 22:08:35", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[2993b24e] Starting diagnosis pipeline..."}
+{"timestamp": "2026-05-19 22:08:35", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[2993b24e] Searching memory for similar incidents..."}
+{"timestamp": "2026-05-19 22:08:36", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight recall failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 16:38:40 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 22:08:36", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[2993b24e] Incident classified as: PARTIAL (score=0.5000)"}
+{"timestamp": "2026-05-19 22:08:36", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[2993b24e] Routing: Partial match (score=0.50) — using cheap model | Model tier: cheap | Model: llama-3.1-8b-instant"}
+{"timestamp": "2026-05-19 22:08:36", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[2993b24e] Using simple reasoning chain..."}
+{"timestamp": "2026-05-19 22:08:36", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 22:08:37", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=llama-3.1-8b-instant, input_tokens=461, output_tokens=216, cost=$0.000040, latency=0.79s"}
+{"timestamp": "2026-05-19 22:08:37", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000040 / $1.00"}
+{"timestamp": "2026-05-19 22:08:37", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[2993b24e] Diagnosis complete. Type=PARTIAL, Model=llama-3.1-8b-instant, Cost=$0.000040, Latency=1.84s"}
+{"timestamp": "2026-05-19 22:11:04", "name": "incident_agent.vector_store", "level": "INFO", "message": "Hindsight Memory initialized: bank=incident-memory-bank"}
+{"timestamp": "2026-05-19 22:11:05", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 22:11:10", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 22:11:11", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[d105c140] Starting diagnosis pipeline..."}
+{"timestamp": "2026-05-19 22:11:11", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[d105c140] Searching memory for similar incidents..."}
+{"timestamp": "2026-05-19 22:11:12", "name": "incident_agent.vector_store", "level": "WARNING", "message": "Hindsight recall failed, falling back to local: (401)
+Reason: Unauthorized
+HTTP response headers: <CIMultiDictProxy('Date': 'Tue, 19 May 2026 16:41:16 GMT', 'Content-Type': 'application/json', 'Content-Length': '55', 'Connection': 'keep-alive', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains')>
+HTTP response body: {"detail":"Authentication failed: API key has expired"}
+"}
+{"timestamp": "2026-05-19 22:11:12", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[d105c140] Incident classified as: PARTIAL (score=0.5000)"}
+{"timestamp": "2026-05-19 22:11:12", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[d105c140] Routing: Partial match (score=0.50) — using cheap model | Model tier: cheap | Model: llama-3.1-8b-instant"}
+{"timestamp": "2026-05-19 22:11:12", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[d105c140] Using simple reasoning chain..."}
+{"timestamp": "2026-05-19 22:11:12", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 22:11:13", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=llama-3.1-8b-instant, input_tokens=461, output_tokens=178, cost=$0.000037, latency=0.95s"}
+{"timestamp": "2026-05-19 22:11:13", "name": "incident_agent.model_factory", "level": "INFO", "message": "Cumulative cost: $0.000037 / $1.00"}
+{"timestamp": "2026-05-19 22:11:13", "name": "incident_agent.inference_engine", "level": "INFO", "message": "[d105c140] Diagnosis complete. Type=PARTIAL, Model=llama-3.1-8b-instant, Cost=$0.000037, Latency=1.90s"}
+{"timestamp": "2026-05-19 22:11:28", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "GitHub CLI detected: C:\Program Files\GitHub CLI\gh.exe"}
+{"timestamp": "2026-05-19 22:11:28", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[d105c140] 1/3 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 22:11:29", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 22:11:34", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 22:11:34", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 22:11:39", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3782, output_tokens=1775, cost=$0.000331, latency=4.66s"}
+{"timestamp": "2026-05-19 22:11:39", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 22:11:39", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[d105c140] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 22:14:25", "name": "incident_agent.cli", "level": "ERROR", "message": "Remediation failed"}
+Traceback (most recent call last):
+  File "C:\Users\COSMOS\OneDrive\Desktop\incident-agent\main.py", line 732, in cmd_remediate
+    if not Prompt.ask("\n[bold]Apply these fixes?[/bold]", choices=["y", "n"], default="n") == "y":
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\COSMOS\miniconda3\Lib\site-packages\rich\prompt.py", line 149, in ask
+    return _prompt(default=default, stream=stream)
+  File "C:\Users\COSMOS\miniconda3\Lib\site-packages\rich\prompt.py", line 292, in __call__
+    value = self.get_input(self.console, prompt, self.password, stream=stream)
+  File "C:\Users\COSMOS\miniconda3\Lib\site-packages\rich\prompt.py", line 211, in get_input
+    return console.input(prompt, password=password, stream=stream)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\COSMOS\miniconda3\Lib\site-packages\rich\console.py", line 2151, in input
+    result = input()
+EOFError: EOF when reading a line
+{"timestamp": "2026-05-19 22:14:39", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "GitHub CLI detected: C:\Program Files\GitHub CLI\gh.exe"}
+{"timestamp": "2026-05-19 22:14:39", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[d105c140] 1/3 steps matched via rules. Using LLM for remainder..."}
+{"timestamp": "2026-05-19 22:14:40", "name": "incident_agent.model_factory", "level": "INFO", "message": "cascadeflow harness initialized. Budget cap: $1.0"}
+{"timestamp": "2026-05-19 22:14:45", "name": "incident_agent.model_factory", "level": "INFO", "message": "CascadeAgent ready: cheap=llama-3.1-8b-instant, powerful=qwen/qwen3-32b"}
+{"timestamp": "2026-05-19 22:14:45", "name": "incident_agent.model_factory", "level": "ERROR", "message": "CascadeAgent error: 'coroutine' object has no attribute 'model_used'"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.groq_client", "level": "INFO", "message": "Groq API call successful: model=qwen/qwen3-32b, input_tokens=3782, output_tokens=1883, cost=$0.000340, latency=5.04s"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.task_generator", "level": "WARNING", "message": "LLM task generation failed: Expecting value: line 1 column 1 (char 0)"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.task_generator", "level": "INFO", "message": "[d105c140] Generated 1 fix tasks (1 rule-based, 0 LLM/fallback)"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "[d105c140-task-03] Applying: Implement IP blocking or rate limiting for the client IP (19... (k8s_manifest)"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Written: fixes\paystream\k8s\network-policies\restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.fixer", "level": "INFO", "message": "  Network policy applied: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[d105c140] Fixes: 1 applied, 0 failed"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_redis_pool.py"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "Test file already exists: tests/test_network_policy.py"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.test_generator", "level": "INFO", "message": "No test templates matched the applied tasks."}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.engine", "level": "INFO", "message": "[d105c140] Generated 0 test files"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.validator", "level": "INFO", "message": "Validation: 8/8 tests passed"}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "No changes to commit."}
+{"timestamp": "2026-05-19 22:14:50", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "Git push failed before gh PR create: error: src refspec fix/d105c140-the-auth-service-is-experiencing-a-high- does not match any
+error: failed to push some refs to 'https://github.com/Kolavara/paystream-infra.git'
+"}
+{"timestamp": "2026-05-19 22:14:53", "name": "incident_agent.remediation.github_pusher", "level": "WARNING", "message": "gh CLI failed: pull request create failed: GraphQL: Head sha can't be blank, Base sha can't be blank, No commits between main and fix/d105c140-the-auth-service-is-experiencing-a-high-, Head ref must be a branch (createPullRequest)"}
+{"timestamp": "2026-05-19 22:14:56", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "  API committed: k8s/network-policies/restrict-payment-access.yaml"}
+{"timestamp": "2026-05-19 22:14:58", "name": "incident_agent.remediation.github_pusher", "level": "INFO", "message": "PR created: #4 at https://github.com/Kolavara/paystream-infra/pull/4"}

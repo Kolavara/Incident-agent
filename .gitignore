@@ -29,5 +29,20 @@ audit_log.json
 .DS_Store
 Thumbs.db
 
+# Logs & coverage
+*.log
+.coverage
+.coverage.*
+htmlcov/
+
+# Node
+node_modules/
+
+# Nested git repos (fixes/paystream has its own repo)
+.git/
+
+# OS artifacts
+nul
+
 # Docker
 .docker/
