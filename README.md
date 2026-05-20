@@ -1,14 +1,16 @@
 <p align="center">
-  <h1 align="center">🛡️ Incident Response Agent</h1>
-  <p align="center">
-    <strong>AI-powered SRE assistant that diagnoses failures, auto-remediates with tested fixes, and pushes PR-ready code — learning from every incident.</strong>
-  </p>
-  <p align="center">
-    <a href="https://github.com/Kolavara/Incident-agent/actions"><img src="https://github.com/Kolavara/Incident-agent/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-    <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+"></a>
-    <a href="https://github.com/Kolavara/Incident-agent/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT"></a>
-    <a href="https://console.groq.com"><img src="https://img.shields.io/badge/LLM-Groq-orange?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcng9IjQiIGZpbGw9IiNmOTczMTYiLz48L3N2Zz4=" alt="Groq"></a>
-  </p>
+  <img src="docs/images/hero-banner.png" alt="Incident Response Agent — AI-Powered SRE Assistant" width="100%">
+</p>
+
+<p align="center">
+  <strong>AI-powered SRE assistant that diagnoses failures, auto-remediates with tested fixes, and pushes PR-ready code — learning from every incident.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Kolavara/Incident-agent/actions"><img src="https://github.com/Kolavara/Incident-agent/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+"></a>
+  <a href="https://github.com/Kolavara/Incident-agent/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT"></a>
+  <a href="https://console.groq.com"><img src="https://img.shields.io/badge/LLM-Groq-orange" alt="Groq"></a>
 </p>
 
 ---
@@ -41,10 +43,9 @@ Built for DevOps and SRE teams who need fast, cost-effective incident response. 
 
 The agent runs an 8-step pipeline — from raw error log to a merged Pull Request — with a single command:
 
-```
-  Error Log ──► Detect ──► Analyze ──► Diagnose ──► Plan ──► Fix ──► Test ──► Commit ──► PR 🚀
-                 ①          ②          ③           ④        ⑤       ⑥        ⑦         ⑧
-```
+<p align="center">
+  <img src="docs/images/pipeline-flow.png" alt="8-step incident response pipeline: Detect → Analyze → Diagnose → Plan → Fix → Test → Commit → PR" width="100%">
+</p>
 
 **One command does it all:**
 
@@ -81,50 +82,22 @@ python main.py remediate          # Apply fixes, run tests, create PR
 
 ## Architecture
 
-```
-                         ┌─────────────────────┐
-                         │    User (CLI / Web)  │
-                         └──────────┬──────────┘
-                                    │
-                                    ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                         Inference Engine                            │
-│                                                                     │
-│  ┌────────────┐  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
-│  │Preprocessor│─►│  Retriever   │─►│ Model Router │─►│    LLM    │ │
-│  │(clean log) │  │ (find past)  │  │(cascadeflow) │  │  (Groq)   │ │
-│  └────────────┘  └──────┬───────┘  └──────────────┘  └───────────┘ │
-│                         │                                           │
-│                         ▼                                           │
-│  ┌────────────┐  ┌──────────────┐  ┌─────────────────────────────┐ │
-│  │  Indexer   │◄─│  Response    │◄─│  Prompt Builder + Parser    │ │
-│  │(store fix) │  │  Parser      │  │                             │ │
-│  └────────────┘  └──────────────┘  └─────────────────────────────┘ │
-└──────────────────────────────────────────────────────────────────────┘
-                                    │
-        ┌───────────────────────────┼───────────────────────────┐
-        ▼                           ▼                           ▼
-┌──────────────┐          ┌──────────────┐          ┌──────────────────┐
-│   Hindsight  │          │   Groq API   │          │  Ollama (Local)  │
-│  (vector     │          │  (cloud LLM) │          │  $0 fallback     │
-│   memory)    │          │              │          │                  │
-└──────────────┘          └──────────────┘          └──────────────────┘
-                                    │
-                                    ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                       Remediation Engine                            │
-│                                                                     │
-│  ┌──────────────┐  ┌──────────┐  ┌────────────┐  ┌───────────────┐ │
-│  │Task Generator│─►│  Fixer   │─►│ Test Gen.  │─►│  Validator    │ │
-│  │(rules + LLM) │  │(k8s/code)│  │  (pytest)  │  │  (8+ tests)  │ │
-│  └──────────────┘  └──────────┘  └────────────┘  └───────┬───────┘ │
-│                                                           │         │
-│  ┌──────────────┐  ┌──────────────┐                      │         │
-│  │GitHub Pusher │◄─│ Local Git    │◄─────────────────────┘         │
-│  │(gh CLI/API)  │  │(fixes repo)  │                                │
-│  └──────────────┘  └──────────────┘                                │
-└──────────────────────────────────────────────────────────────────────┘
-```
+<p align="center">
+  <img src="docs/images/architecture.png" alt="System architecture: Inference Engine with Preprocessor, Retriever, Model Router, LLM connecting to Hindsight Memory, Groq API, and Ollama, feeding into the Remediation Engine" width="100%">
+</p>
+
+The system is composed of two core engines:
+
+- **Inference Engine** — Preprocesses logs, searches memory for past incidents, routes to the optimal model via cascadeflow, and parses structured diagnosis output.
+- **Remediation Engine** — Takes diagnosis results and generates fix tasks, applies changes, generates and runs pytest validation, then commits and pushes a PR to GitHub.
+
+Both engines are backed by three external services (all optional with fallbacks):
+
+| Service | Purpose | Fallback |
+|---|---|---|
+| **Hindsight** | Vector memory for past incidents | Local JSON store (`data/memory_store.json`) |
+| **Groq API** | Fast cloud LLM inference | Ollama local models |
+| **GitHub** | PR creation and branch pushing | Local git branches + manual PR URL |
 
 ---
 
@@ -199,11 +172,21 @@ python main.py diagnose
 | `python main.py remediate-plan` | Preview the remediation plan without applying changes |
 | `python main.py remediate-demo` | Demo auto-remediation on synthetic PayStream incidents |
 
+### Example CLI Output
+
+<p align="center">
+  <img src="docs/images/cli-diagnosis.png" alt="Terminal showing a Rich-formatted incident diagnosis panel with root cause, confidence, fix steps, and cost tracking" width="85%">
+</p>
+
 ---
 
 ## Web Dashboard
 
 The project includes a browser-based dashboard built with **FastAPI** (backend) and **React + Vite + TypeScript** (frontend).
+
+<p align="center">
+  <img src="docs/images/web-dashboard.png" alt="Web dashboard showing log input, diagnosis results, cost tracking chart, and incident history table" width="100%">
+</p>
 
 ```bash
 # Start both servers with one command
@@ -248,6 +231,10 @@ When an incident is resolved, it's stored back with root cause, fix applied, ser
 ## Cost-Optimized Routing (cascadeflow)
 
 cascadeflow routes each incident to the most cost-effective model based on memory similarity:
+
+<p align="center">
+  <img src="docs/images/cost-routing.png" alt="Smart model routing: KNOWN incidents use cheap models at $0.001, NOVEL incidents use powerful models at $0.031, resulting in 77% cost savings" width="85%">
+</p>
 
 | Incident Type | Model | Approx. Cost |
 |---|---|---|
@@ -517,6 +504,8 @@ incident-agent/
 ├── data/
 │   ├── memory_store.json         # Local incident memory (JSON fallback)
 │   └── demo_incidents.json       # 15 synthetic PayStream incidents
+├── docs/
+│   └── images/                   # README images and diagrams
 ├── fixes/paystream/              # Target repo for auto-remediation demo
 │   ├── configs/                  #   Service configs (Redis, Postgres, etc.)
 │   ├── k8s/                      #   Kubernetes manifests
