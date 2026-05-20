@@ -5,7 +5,7 @@ https://github.com/user-attachments/assets/92e1866d-f5a4-4950-be3a-81b8e9bf83c3
 
 
 <p align="center">
-  <img src="" alt="Incident Response Agent — AI-Powered SRE Assistant" width="100%">
+ 
 </p>
 
 <p align="center">
